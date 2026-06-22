@@ -105,6 +105,19 @@
       border-radius: 50%;
       background: #b0b8c1;
     }
+    .hd-end {
+      font-size: 12px;
+      color: #666;
+      cursor: pointer;
+      padding: 5px 10px;
+      border: 1px solid #ccc;
+      border-radius: 14px;
+      background: #fff;
+      margin-right: 6px;
+      white-space: nowrap;
+      transition: background .15s, color .15s;
+    }
+    .hd-end:hover { background: #f5f5f5; color: #333; }
     .hd-close {
       font-size: 18px;
       color: #888;
@@ -114,6 +127,41 @@
       background: none;
       line-height: 1;
     }
+
+    /* ── 상담 종료 화면 ── */
+    .end-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      background: #f6f6f6;
+      padding: 32px 24px;
+      text-align: center;
+    }
+    .end-screen.active { display: flex; }
+    .end-msg-box {
+      background: #ebebeb;
+      border-radius: 10px;
+      padding: 20px 24px;
+      font-size: 13px;
+      color: #555;
+      line-height: 1.8;
+      margin-bottom: 24px;
+      width: 100%;
+    }
+    .end-restart-btn {
+      padding: 13px 36px;
+      border: 1.5px solid #aaa;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      color: #333;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .end-restart-btn:hover { background: #f0f0f0; }
 
     /* ── 스크린 전환 ── */
     .screen { display: none; flex-direction: column; flex: 1; overflow: hidden; }
@@ -479,6 +527,7 @@
       <div class="hd-name">air 채팅 상담</div>
       <div class="hd-status"><div class="status-dot"></div>Online</div>
     </div>
+    <button class="hd-end" onclick="endChat()">상담종료</button>
     <button class="hd-close">✕</button>
   </div>
 
@@ -637,9 +686,37 @@
     </div>
   </div>
 
+  <!-- ══════════ 상담 종료 화면 ══════════ -->
+  <div class="end-screen" id="endScreen">
+    <div class="end-msg-box">
+      고객님, 챗봇과의 상담이 종료되었습니다.<br>
+      챗봇과 대화를 다시 시작하고 싶으시면,<br>
+      아래 버튼을 눌러주세요.
+    </div>
+    <button class="end-restart-btn" onclick="restartChat()">챗봇 시작하기</button>
+  </div>
+
 </div><!-- /chat-window -->
 
 <script>
+  /* ── 상담 종료 / 재시작 ── */
+  function endChat() {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('endScreen').classList.add('active');
+    document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
+  }
+
+  function restartChat() {
+    document.getElementById('endScreen').classList.remove('active');
+    cur = 0;
+    document.getElementById('cTrack').style.transform = 'translateX(0)';
+    document.getElementById('arrowL').classList.add('hidden');
+    document.getElementById('arrowR').classList.remove('hidden');
+    updateDots();
+    showScreen(1, null);
+    document.querySelectorAll('.demo-tab').forEach((t,i) => t.classList.toggle('active', i === 0));
+  }
+
   /* ── 캐러셀 ── */
   let cur = 0;
   const TOTAL = 4;
