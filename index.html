@@ -867,7 +867,7 @@
 
     // 100자 이상일 때만 more-toggle 동적 삽입 (connect-btn 바로 앞)
     const totalLen = item.a.join('').length;
-    if (totalLen >= 100) {
+    if (totalLen >= 250) {
       const btn = document.createElement('button');
       btn.className = 'more-toggle';
       btn.dataset.open = 'false';
