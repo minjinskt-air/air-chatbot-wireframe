@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VOC 관리</title>
+<style>
+:root{
+  --bg:#FFFFFF; --bg-secondary:#F7F6F3; --bg-tertiary:#F0EFEA; --border:#E3E2DC; --border-light:#EEEEE9;
+  --text-primary:#1A1A18; --text-secondary:#5F5E5A; --text-tertiary:#9B9A96;
+  --blue:#185FA5; --blue-light:#E6F1FB; --blue-mid:#85B7EB; --blue-action:#378ADD;
+  --red:#791F1F; --red-light:#FCEBEB; --red-border:#F7C1C1;
+  --green:#27500A; --green-light:#EAF3DE;
+  --amber:#633806; --amber-light:#FAEEDA;
+  --neutral:#444441; --neutral-light:#F1EFE8;
+  --font:'Noto Sans KR',-apple-system,sans-serif; --font-mono:'SF Mono',monospace;
+  --radius-sm:4px; --radius-md:6px; --radius-lg:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg-tertiary);color:var(--text-primary);font-size:13px}
+.app{max-width:1300px;margin:0 auto;padding:24px}
+.screen{display:none}
+.screen.active{display:block}
+
+.btn{font-size:12px;padding:6px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg);color:var(--text-primary);cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--bg-secondary)}
+.btn-primary{background:var(--blue-action);color:#fff;border-color:var(--blue-action)}
+.btn-primary:hover{background:var(--blue)}
+.btn-danger{color:var(--red);border-color:var(--red-border)}
+.pill{border:1px solid var(--border);border-radius:14px;padding:3px 10px;font-size:11px;color:var(--text-secondary);white-space:nowrap;display:inline-block}
+
+.page{max-width:1300px;margin:0 auto;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
+.topbar{background:var(--bg-secondary);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+.topbar .title{font-size:16px;font-weight:600}
+.topbar .breadcrumb{font-size:12px;color:var(--text-tertiary);margin-top:2px}
+
+.stat-row{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid var(--border)}
+.stat-cell{padding:16px;text-align:center;border-right:1px solid var(--border);cursor:pointer;transition:background .1s}
+.stat-cell:hover{background:var(--bg-secondary)}
+.stat-cell:last-child{border-right:none}
+.stat-cell.active{border:2px solid var(--text-primary);margin:-1px;background:var(--bg-secondary)}
+.stat-num{font-size:22px;font-weight:600}
+.stat-lbl{font-size:11px;color:var(--text-secondary);margin-top:3px}
+
+.search-area{padding:14px 20px;border-bottom:1px solid var(--border)}
+.search-tabs{display:flex;gap:0;margin-bottom:10px;width:fit-content}
+.search-tab{border:1px solid var(--border);border-right:none;padding:7px 16px;font-size:12px;color:var(--text-tertiary);cursor:pointer}
+.search-tab:first-child{border-radius:6px 0 0 6px}
+.search-tab:last-child{border-right:1px solid var(--border);border-radius:0 6px 6px 0}
+.search-tab.active{border:2px solid var(--text-primary);color:var(--text-primary);font-weight:600;margin:-1px;background:var(--bg-secondary)}
+.search-row{display:flex;gap:8px}
+.search-input{flex:1;border:1px solid var(--border);padding:8px 12px;font-size:12px;border-radius:var(--radius-md);outline:none}
+.search-input:focus{border-color:var(--blue-action)}
+
+.list-header,.list-row{display:grid;grid-template-columns:140px 2.2fr 90px 80px 80px 80px 70px;padding:11px 20px;align-items:center}
+.list-header{background:var(--bg-secondary);border-bottom:1px solid var(--border)}
+.list-header span{font-size:11px;color:var(--text-tertiary);font-weight:600}
+.list-row{border-bottom:1px solid var(--border-light);cursor:pointer}
+.list-row:hover{background:var(--bg-secondary)}
+.list-row:last-child{border-bottom:none}
+.lr-id{font-size:12px;color:var(--text-tertiary);font-family:var(--font-mono)}
+.lr-title{font-size:13px;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:12px}
+.lr-text{font-size:12px;color:var(--text-secondary)}
+.empty-row{padding:40px;text-align:center;color:var(--text-tertiary);font-size:12px}
+
+.wrap{max-width:900px;margin:0 auto}
+.page-header{display:flex;align-items:center;gap:10px;padding:12px 4px}
+.back-btn{font-size:13px;color:var(--text-secondary);background:none;border:none;cursor:pointer}
+.back-btn:hover{color:var(--text-primary)}
+.page-title{font-size:18px;font-weight:600}
+.mode-badge{font-size:11px;padding:2px 9px;border-radius:4px;font-weight:600}
+.mode-badge.edit{background:var(--amber-light);color:var(--amber)}
+.mode-badge.view{background:var(--green-light);color:var(--green)}
+
+.card{background:var(--bg);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;margin-bottom:10px}
+.card-body{padding:18px 20px}
+.card-title{font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:14px;display:flex;align-items:center;gap:6px}
+
+.status-section{padding:16px 20px}
+.sf-label{font-size:11px;color:var(--text-tertiary);margin-bottom:8px}
+.status-btns{display:flex;gap:6px;flex-wrap:wrap}
+.s-btn{font-size:12px;padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--bg);color:var(--text-secondary);cursor:pointer}
+.s-btn:hover{background:var(--bg-secondary)}
+.s-btn.cur-new{background:var(--blue-light);color:var(--blue);border-color:var(--blue-mid);font-weight:600}
+.s-btn.cur-review{background:var(--amber-light);color:var(--amber);border-color:#FAC775;font-weight:600}
+.s-btn.cur-done{background:var(--green-light);color:var(--green);border-color:#C0DD97;font-weight:600}
+.s-btn.cur-hold{background:var(--neutral-light);color:var(--neutral);border-color:#B4B2A9;font-weight:600}
+.status-meta{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+.sm-label{font-size:11px;color:var(--text-tertiary);margin-bottom:4px}
+.sm-value{font-size:13px;font-weight:600}
+.sm-value.muted{color:var(--text-tertiary);font-weight:400}
+
+.history-bar{border-top:1px solid var(--border);padding:14px 20px;background:var(--bg-secondary)}
+.history-label{font-size:11px;color:var(--text-tertiary);margin-bottom:8px;font-weight:600}
+.htable{width:100%;border-collapse:collapse}
+.htable th{font-size:10px;color:var(--text-tertiary);font-weight:400;padding:5px 8px;text-align:left;border-bottom:1px solid var(--border)}
+.htable td{font-size:11px;color:var(--text-secondary);padding:7px 8px;border-bottom:1px solid var(--border-light)}
+.htable tr:last-child td{border-bottom:none}
+.hbadge{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:14px;background:var(--blue-light);color:var(--blue)}
+
+.warn{display:flex;gap:8px;align-items:center;padding:10px 14px;background:var(--amber-light);border-radius:var(--radius-md);font-size:12px;color:var(--amber);margin-bottom:10px}
+
+.fg{display:grid;gap:10px;margin-bottom:12px}
+.fg-1{grid-template-columns:1fr}.fg-2{grid-template-columns:1fr 1fr}.fg-3{grid-template-columns:1fr 1fr 1fr}.fg-5{grid-template-columns:60px 1fr 80px 80px 68px}
+.fw{position:relative}
+.fl{font-size:11px;color:var(--text-tertiary);margin-bottom:4px;display:block}
+.fi{width:100%;font-size:13px;padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg);font-family:var(--font);outline:none}
+.fi:focus{border-color:var(--blue-action)}
+.fi.area{min-height:110px;line-height:1.7;resize:vertical}
+.fi.mono{font-family:var(--font-mono);font-size:12px}
+.fv{width:100%;font-size:13px;padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg-secondary);min-height:34px;display:flex;align-items:center;justify-content:space-between;color:var(--text-secondary)}
+.fv.area{min-height:110px;align-items:flex-start;line-height:1.7;white-space:pre-line;display:block}
+.fv.mono{font-family:var(--font-mono);font-size:12px}
+
+.assignee-row{display:flex}
+.assignee-input{flex:1;font-size:13px;color:var(--text-tertiary);padding:9px 12px;border:1px solid var(--border);border-right:none;border-radius:var(--radius-md) 0 0 var(--radius-md);background:var(--bg)}
+.assignee-btn{font-size:12px;padding:0 16px;border:1px solid var(--blue-action);border-radius:0 var(--radius-md) var(--radius-md) 0;background:var(--blue-action);color:#fff;cursor:pointer;font-weight:600;white-space:nowrap}
+.assignee-btn:hover{background:var(--blue)}
+
+.type-pills{display:flex;gap:6px;margin-bottom:12px}
+.tp{font-size:12px;padding:6px 16px;border-radius:20px;border:1px solid var(--border);color:var(--text-secondary);background:var(--bg);cursor:pointer}
+.tp:hover{background:var(--bg-secondary)}
+.tp.error-on{background:var(--red-light);color:var(--red);border-color:var(--red-border);font-weight:600}
+.tp.promo-on{background:var(--blue-light);color:var(--blue);border-color:var(--blue-mid);font-weight:600}
+.tp.general-on{background:var(--neutral-light);color:var(--neutral);border-color:#B4B2A9;font-weight:600}
+.hint{font-size:11px;color:var(--text-tertiary);margin-bottom:14px;padding:7px 10px;background:var(--bg-secondary);border-radius:var(--radius-md)}
+
+.sub-error{border:1px solid var(--red-border);border-radius:var(--radius-md);padding:16px;background:#FFF8F8}
+.sub-title{font-size:12px;font-weight:600;color:var(--red);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--red-border)}
+.sub-divider{height:1px;background:var(--red-border);margin:14px 0}
+.imei-hd{display:grid;grid-template-columns:60px 1fr 80px 80px 68px;gap:8px;margin-bottom:4px}
+.imei-lbl{font-size:10px;color:var(--text-tertiary)}
+
+.sub-promo{border:1px solid var(--blue-mid);border-radius:var(--radius-md);padding:16px;background:#F5FAFE}
+.sub-promo .sub-title{color:var(--blue);border-bottom-color:var(--blue-mid)}
+
+.sub-general{border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;background:var(--bg-secondary)}
+.sub-general .sub-title{color:var(--text-secondary);border-bottom-color:var(--border)}
+
+.attach-row{display:flex;gap:8px;flex-wrap:wrap}
+.attach-box{width:64px;height:64px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg-secondary);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:9px;color:var(--text-tertiary);text-align:center;cursor:pointer}
+.attach-box.add{border-style:dashed}
+.attach-box.add:hover{background:var(--border-light)}
+
+.cmt-input{border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px;margin-bottom:14px}
+.cmt-ta{width:100%;font-size:13px;border:none;outline:none;resize:none;min-height:64px;line-height:1.6;font-family:var(--font)}
+.cmt-foot{display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+.cmt-sel{font-size:12px;padding:4px 8px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg)}
+.cmt-submit{font-size:12px;padding:6px 16px;border-radius:var(--radius-md);border:none;background:var(--blue-action);color:#fff;font-weight:600;cursor:pointer}
+.cmt-submit:hover{background:var(--blue)}
+.ci{border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px 14px;margin-bottom:8px}
+.ci.reply{margin-left:28px;border-left:3px solid var(--border)}
+.ci-hd{display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap}
+.ci-author{font-size:12px;font-weight:600}
+.ci-org{font-size:11px;color:var(--text-tertiary)}
+.ci-date{font-size:11px;color:var(--text-tertiary)}
+.ci-body{font-size:13px;line-height:1.6}
+.ci-act{font-size:11px;color:var(--text-tertiary);background:none;border:none;cursor:pointer}
+.ci-act:hover{color:var(--text-secondary)}
+.cmt-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:14px;background:var(--neutral-light);color:var(--neutral)}
+.reply-form{margin-left:28px;margin-bottom:8px;border:1px solid var(--border);border-radius:var(--radius-lg);padding:10px;background:var(--bg-secondary);display:none}
+.reply-form.open{display:block}
+.reply-ta{width:100%;font-size:12px;border:none;outline:none;resize:none;min-height:48px;font-family:var(--font)}
+.reply-foot{display:flex;justify-content:flex-end;gap:6px;margin-top:6px;padding-top:6px;border-top:1px solid var(--border)}
+
+.action-bar{display:flex;justify-content:flex-end;gap:14px;padding:14px 4px}
+.cancel-link{font-size:13px;color:var(--text-secondary);background:none;border:none;cursor:pointer}
+.cancel-link:hover{color:var(--text-primary)}
+.save-btn{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;padding:8px 22px;border-radius:var(--radius-md);border:none;background:var(--blue-action);color:#fff;cursor:pointer}
+.save-btn:hover{background:var(--blue)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--text-primary);color:#fff;padding:10px 20px;border-radius:var(--radius-md);font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:999}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <div class="screen active" id="screen-list">
+    <div class="page">
+      <div class="topbar">
+        <div>
+          <div class="title">VOC 관리</div>
+          <div class="breadcrumb">상담 지원 &gt; VOC 관리</div>
+        </div>
+        <button class="btn btn-primary" onclick="goToEdit()">+ VOC 등록</button>
+      </div>
+
+      <div class="stat-row" id="stat-row"></div>
+
+      <div class="search-area">
+        <div class="search-tabs" id="search-tabs">
+          <div class="search-tab active" data-tab="번호">VOC 번호</div>
+          <div class="search-tab" data-tab="제목">VOC 제목</div>
+          <div class="search-tab" data-tab="담당자">담당자</div>
+          <div class="search-tab" data-tab="userid">User-ID</div>
+        </div>
+        <div class="search-row">
+          <input class="search-input" id="search-input" placeholder="VOC 번호 입력 (예: V20260610-0047)">
+          <button class="btn btn-primary" onclick="renderList()">검색</button>
+        </div>
+      </div>
+
+      <div class="list-header">
+        <span>VOC 번호</span><span>VOC 제목</span><span>VOC 유형</span><span>상태</span><span>등록자</span><span>담당자</span><span>등록일</span>
+      </div>
+      <div id="list-body"></div>
+    </div>
+  </div>
+
+  <div class="screen" id="screen-edit">
+    <div class="wrap">
+      <div class="page-header">
+        <button class="back-btn" onclick="goToList()">← 뒤로</button>
+        <span class="page-title" id="edit-title">VOC 등록</span>
+        <span class="mode-badge edit">작성 중</span>
+      </div>
+
+      <div class="card"><div class="card-body">
+        <div class="card-title">① VOC 정보</div>
+        <div class="fg fg-1"><div class="fw"><span class="fl">VOC 제목 *</span><input class="fi" id="f-title" placeholder="VOC 제목을 입력해 주세요"></div></div>
+        <div class="fg fg-2" style="margin-bottom:0">
+          <div class="fw"><span class="fl">VOC 수신일자</span><input class="fi" id="f-receive" placeholder="YYYY-MM-DD HH:MM"></div>
+          <div>
+            <span class="fl">담당자</span>
+            <div class="assignee-row"><input class="assignee-input" id="f-assignee" placeholder="선택된 담당자 없음" style="border:1px solid var(--border)"><button class="assignee-btn" onclick="alert('담당자 검색 팝업 (구현 예정)')">검색</button></div>
+          </div>
+        </div>
+      </div></div>
+
+      <div class="card"><div class="card-body">
+        <div class="card-title">② 고객 정보</div>
+        <div class="fg fg-3" style="margin-bottom:0">
+          <div class="fw"><span class="fl">고객명</span><input class="fi" id="f-customer" placeholder="입력 필드"></div>
+          <div class="fw"><span class="fl">서비스번호</span><input class="fi" id="f-phone" placeholder="입력 필드"></div>
+          <div class="fw"><span class="fl">User ID</span><input class="fi" id="f-userid" placeholder="입력 필드"></div>
+        </div>
+      </div></div>
+
+      <div class="card"><div class="card-body">
+        <div class="card-title">③ VOC 유형 및 내용</div>
+        <div class="type-pills">
+          <button class="tp error-on" id="e-error" onclick="setEditType('error')">개통오류</button>
+          <button class="tp" id="e-promo" onclick="setEditType('promo')">프로모션</button>
+          <button class="tp" id="e-general" onclick="setEditType('general')">일반VOC</button>
+        </div>
+        <div class="hint">유형 선택에 따라 아래 서브섹션이 토글됩니다.</div>
+
+        <div class="sub-error" id="e-sub-error">
+          <div class="sub-title">개통오류 입력 필드</div>
+          <div class="fg fg-3">
+            <div class="fw"><span class="fl">개통 시도 채널</span><input class="fi" id="ef-channel" placeholder="선택/입력"></div>
+            <div class="fw"><span class="fl">이용 중인 통신사</span><input class="fi" id="ef-telecom" placeholder="선택/입력"></div>
+            <div class="fw"><span class="fl">SIM 유형</span><input class="fi" id="ef-sim" placeholder="선택/입력"></div>
+          </div>
+          <div class="fg fg-3">
+            <div class="fw"><span class="fl">업무처리 유형</span><input class="fi" id="ef-worktype" placeholder="선택/입력"></div>
+            <div class="fw"><span class="fl">개통 SIM 유형</span><input class="fi" id="ef-actsim" placeholder="선택/입력"></div>
+            <div class="fw"><span class="fl">개통할 단말</span><input class="fi" id="ef-device" placeholder="선택/입력"></div>
+          </div>
+          <div class="fg fg-3">
+            <div class="fw"><span class="fl">모델명</span><input class="fi" id="ef-model" placeholder="입력 필드"></div>
+            <div class="fw"><span class="fl">용량/색상</span><input class="fi" id="ef-color" placeholder="입력 필드"></div>
+            <div class="fw"><span class="fl">OMD/OEM</span><input class="fi" id="ef-oem" placeholder="선택/입력"></div>
+          </div>
+          <div class="fg fg-1"><div class="fw"><span class="fl">문의(오류) 단계 및 문구</span><input class="fi" id="ef-errortext" placeholder="입력 필드"></div></div>
+          <div class="fg fg-1"><div class="fw"><span class="fl">고객 주장/확인사항/요청사항</span><textarea class="fi area" id="ef-content" placeholder="텍스트 영역"></textarea></div></div>
+
+          <div class="sub-divider"></div>
+          <div class="sub-title">기기 정보 (AIR 개통 단말)</div>
+          <div class="fg fg-1" style="margin-bottom:10px"><div class="fw"><span class="fl">일련번호</span><input class="fi" id="ef-serial" placeholder="입력 필드"></div></div>
+          <div class="imei-hd"><div></div><div class="imei-lbl">IMEI 번호</div><div class="imei-lbl">통신사명</div><div class="imei-lbl">SIM 유형</div><div class="imei-lbl">사용여부</div></div>
+          <div class="fg fg-5" style="margin-bottom:6px"><div class="fv" style="font-size:11px">IMEI 1</div><input class="fi mono" id="ef-imei1"><input class="fi" id="ef-imei1-tel" style="font-size:11px"><input class="fi" id="ef-imei1-sim" style="font-size:11px"><input class="fi" id="ef-imei1-use" style="font-size:11px"></div>
+          <div class="fg fg-5" style="margin-bottom:10px"><div class="fv" style="font-size:11px">IMEI 2</div><input class="fi mono" id="ef-imei2"><input class="fi" id="ef-imei2-tel" style="font-size:11px"><input class="fi" id="ef-imei2-sim" style="font-size:11px"><input class="fi" id="ef-imei2-use" style="font-size:11px"></div>
+          <div class="fg fg-1" style="margin-bottom:0"><div class="fw"><span class="fl">EID</span><input class="fi" id="ef-eid" placeholder="입력 필드"></div></div>
+        </div>
+
+        <div class="sub-promo" id="e-sub-promo" style="display:none">
+          <div class="sub-title">프로모션 입력 필드</div>
+          <div class="fg fg-2">
+            <div class="fw"><span class="fl">프로모션명</span><input class="fi" id="pf-name" placeholder="입력 필드"></div>
+            <div class="fw"><span class="fl">프로모션 코드</span><input class="fi" id="pf-code" placeholder="입력 필드"></div>
+          </div>
+          <div class="fg fg-1" style="margin-bottom:0"><div class="fw"><span class="fl">고객 주장/확인사항/요청사항</span><textarea class="fi area" id="pf-content" placeholder="텍스트 영역"></textarea></div></div>
+        </div>
+
+        <div class="sub-general" id="e-sub-general" style="display:none">
+          <div class="sub-title">일반VOC</div>
+          <div class="fg fg-1" style="margin-bottom:0"><div class="fw"><span class="fl">고객 주장/확인사항/요청사항</span><textarea class="fi area" id="gf-content" placeholder="텍스트 영역"></textarea></div></div>
+        </div>
+      </div></div>
+
+      <div class="card"><div class="card-body">
+        <div class="card-title">④ 첨부파일</div>
+        <div class="attach-row"><div class="attach-box add">+ 추가</div></div>
+      </div></div>
+
+      <div class="action-bar">
+        <button class="cancel-link" onclick="goToList()">취소</button>
+        <button class="save-btn" onclick="saveVoc()">💾 저장</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen" id="screen-view">
+    <div class="wrap">
+      <div class="page-header">
+        <button class="back-btn" onclick="goToList()">← 뒤로</button>
+        <span class="page-title" id="view-id">VOC 상세</span>
+        <span class="mode-badge view">등록 완료</span>
+        <div style="flex:1"></div>
+        <button class="btn" onclick="editFromView()" style="margin-right:6px">수정</button>
+        <button class="btn btn-danger" onclick="deleteVoc()">삭제</button>
+      </div>
+
+      <div class="card">
+        <div class="status-section">
+          <div class="sf-label">현재 상태</div>
+          <div class="status-btns" id="status-btns">
+            <button class="s-btn" data-s="new" onclick="changeStatus('new')">접수</button>
+            <button class="s-btn" data-s="review" onclick="changeStatus('review')">처리중</button>
+            <button class="s-btn" data-s="done" onclick="changeStatus('done')">완료</button>
+            <button class="s-btn" data-s="hold" onclick="changeStatus('hold')">보류</button>
+          </div>
+          <div class="status-meta">
+            <div><div class="sm-label">담당자</div><div class="sm-value muted" id="view-assignee">미배정</div></div>
+            <div><div class="sm-label">등록일</div><div class="sm-value" id="view-regdate">-</div></div>
+          </div>
+        </div>
+        <div class="history-bar">
+          <div class="history-label">처리 이력 (변경자 + 일시 자동 기록)</div>
+          <table class="htable">
+            <tr><th>상태</th><th>변경자</th><th>비고</th><th>변경일시</th></tr>
+            <tbody id="history-rows"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="warn" id="view-warn" style="display:none">⚠ 담당자가 배정되지 않았습니다. 담당자를 지정해 주세요.</div>
+
+      <div class="card"><div class="card-body">
+        <div class="card-title">① VOC 정보</div>
+        <div class="fg fg-1"><div class="fw"><span class="fl">VOC 제목</span><div class="fv" id="view-title"></div></div></div>
+        <div class="fg fg-2" style="margin-bottom:0">
+          <div class="fw"><span class="fl">VOC 수신일자</span><div class="fv" id="view-receive"></div></div>
+          <div>
+            <span class="fl">담당자</span>
+            <div class="assignee-row"><div class="assignee-input" id="view-assignee2" style="background:var(--bg-secondary);color:var(--text-secondary)">미배정</div><button class="assignee-btn" onclick="alert('담당자 재지정 팝업 (구현 예정)')">재지정</button></div>
+          </div>
+        </div>
+      </div></div>
+
+      <div class="card"><div class="card-body">
+        <div class="card-title">② 고객 정보</div>
+        <div class="fg fg-3" style="margin-bottom:0">
+          <div class="fw"><span class="fl">고객명</span><div class="fv" id="view-customer"></div></div>
+          <div class="fw"><span class="fl">서비스번호</span><div class="fv" id="view-phone"></div></div>
+          <div class="fw"><span class="fl">User ID</span><div class="fv" id="view-userid"></div></div>
+        </div>
+      </div></div>
+
+      <div class="card"><div class="card-body">
+        <div class="card-title">③ VOC 유형 및 내용</div>
+        <div class="type-pills" id="view-type-pills">
+          <button class="tp" id="v-error">개통오류</button>
+          <button class="tp" id="v-promo">프로모션</button>
+          <button class="tp" id="v-general">일반VOC</button>
+        </div>
+
+        <div class="sub-error" id="v-sub-error">
+          <div class="sub-title">개통오류 상세 정보</div>
+          <div class="fg fg-3">
+            <div class="fw"><span class="fl">개통 시도 채널</span><div class="fv" id="vv-channel"></div></div>
+            <div class="fw"><span class="fl">이용 중인 통신사</span><div class="fv" id="vv-telecom"></div></div>
+            <div class="fw"><span class="fl">SIM 유형</span><div class="fv" id="vv-sim"></div></div>
+          </div>
+          <div class="fg fg-3">
+            <div class="fw"><span class="fl">업무처리 유형</span><div class="fv" id="vv-worktype"></div></div>
+            <div class="fw"><span class="fl">개통 SIM 유형</span><div class="fv" id="vv-actsim"></div></div>
+            <div class="fw"><span class="fl">개통할 단말</span><div class="fv" id="vv-device"></div></div>
+          </div>
+          <div class="fg fg-3">
+            <div class="fw"><span class="fl">모델명</span><div class="fv" id="vv-model"></div></div>
+            <div class="fw"><span class="fl">용량/색상</span><div class="fv" id="vv-color"></div></div>
+            <div class="fw"><span class="fl">OMD/OEM</span><div class="fv" id="vv-oem"></div></div>
+          </div>
+          <div class="fg fg-1"><div class="fw"><span class="fl">문의(오류) 단계 및 문구</span><div class="fv" id="vv-errortext"></div></div></div>
+          <div class="fg fg-1"><div class="fw"><span class="fl">고객 주장/확인사항/요청사항</span><div class="fv area" id="vv-content"></div></div></div>
+
+          <div class="sub-divider"></div>
+          <div class="sub-title">기기 정보 (AIR 개통 단말)</div>
+          <div class="fg fg-1" style="margin-bottom:10px"><div class="fw"><span class="fl">일련번호</span><div class="fv mono" id="vv-serial"></div></div></div>
+          <div class="imei-hd"><div></div><div class="imei-lbl">IMEI 번호</div><div class="imei-lbl">통신사명</div><div class="imei-lbl">SIM 유형</div><div class="imei-lbl">사용여부</div></div>
+          <div class="fg fg-5" style="margin-bottom:6px"><div class="fv" style="font-size:11px">IMEI 1</div><div class="fv mono" id="vv-imei1" style="font-size:11px"></div><div class="fv" id="vv-imei1-tel" style="font-size:11px"></div><div class="fv" id="vv-imei1-sim" style="font-size:11px"></div><div class="fv" id="vv-imei1-use" style="font-size:11px"></div></div>
+          <div class="fg fg-5" style="margin-bottom:10px"><div class="fv" style="font-size:11px">IMEI 2</div><div class="fv mono" id="vv-imei2" style="font-size:11px"></div><div class="fv" id="vv-imei2-tel" style="font-size:11px"></div><div class="fv" id="vv-imei2-sim" style="font-size:11px"></div><div class="fv" id="vv-imei2-use" style="font-size:11px"></div></div>
+          <div class="fg fg-1" style="margin-bottom:0"><div class="fw"><span class="fl">EID</span><div class="fv mono" id="vv-eid"></div></div></div>
+        </div>
+
+        <div class="sub-promo" id="v-sub-promo" style="display:none">
+          <div class="sub-title">프로모션 상세 정보</div>
+          <div class="fg fg-2">
+            <div class="fw"><span class="fl">프로모션명</span><div class="fv" id="vp-name"></div></div>
+            <div class="fw"><span class="fl">프로모션 코드</span><div class="fv" id="vp-code"></div></div>
+          </div>
+          <div class="fg fg-1" style="margin-bottom:0"><div class="fw"><span class="fl">고객 주장/확인사항/요청사항</span><div class="fv area" id="vp-content"></div></div></div>
+        </div>
+
+        <div class="sub-general" id="v-sub-general" style="display:none">
+          <div class="sub-title">일반VOC</div>
+          <div class="fg fg-1" style="margin-bottom:0"><div class="fw"><span class="fl">고객 주장/확인사항/요청사항</span><div class="fv area" id="vg-content"></div></div></div>
+        </div>
+      </div></div>
+
+      <div class="card"><div class="card-body">
+        <div class="card-title">④ 첨부파일</div>
+        <div class="attach-row"><div class="attach-box add">+ 추가</div></div>
+      </div></div>
+
+      <div class="card"><div class="card-body">
+        <div class="card-title">댓글</div>
+        <div class="cmt-input">
+          <textarea class="cmt-ta" id="cmt-text" placeholder="댓글 내용을 입력해 주세요."></textarea>
+          <div class="cmt-foot">
+            <select class="cmt-sel" id="cmt-type"><option>일반</option><option>문의</option><option>처리</option><option>공지</option></select>
+            <button class="cmt-submit" onclick="addComment()">댓글 등록</button>
+          </div>
+        </div>
+        <div id="comment-list"></div>
+      </div></div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let vocList = [
+  {id:'V20260610-0047', title:'개통 중 본인 확인 실패 오류 반복 발생 — Galaxy S24 단말, 재시도 시에도 동일 증상 지속', type:'error', status:'review', writer:'김고센', assignee:'이지연', regdate:'26.06.10',
+   customer:'김민수', phone:'010-1234-5678', userid:'mskim_91', receive:'2026.06.10 09:12',
+   channel:'앱 (air)', telecom:'KT', sim:'eSIM', worktype:'기기변경', actsim:'eSIM', device:'신규 단말', model:'Galaxy S24', color:'256GB / 티타늄 그레이', oem:'OEM-KT',
+   errortext:'본인 확인 단계 > "인증에 실패했습니다" (ERR-1029)', content:'개통 중 본인 확인 실패 오류가 반복적으로 발생함.\n\n[확인] 인증 서버 응답 지연 추정.\n\n[요청] 인증 재시도 또는 수동 처리 요청.',
+   serial:'C02XR1AAA111', imei1:'356938035600001', imei1tel:'KT', imei1sim:'eSIM', imei1use:'사용중', imei2:'356938035600002', imei2tel:'—', imei2sim:'미사용', imei2use:'—', eid:'89049032007008700000001',
+   history:[{s:'new',who:'김고센',note:'VOC 등록',time:'2026.06.10 09:12'},{s:'review',who:'이지연 / SKT air사업팀',note:'담당자 배정 후 처리 시작',time:'2026.06.10 10:30'}],
+   comments:[]},
+  {id:'V20260610-0046', title:'eSIM 전환 후 데이터 미개통 상태 지속, 앱 재설치 포함 재시도 3회 모두 실패', type:'error', status:'new', writer:'김고센', assignee:'미배정', regdate:'26.06.10',
+   customer:'박서연', phone:'010-8877-3344', userid:'parksy_92', receive:'2026.06.10 11:05',
+   channel:'앱 (air)', telecom:'KT', sim:'eSIM', worktype:'기기변경', actsim:'eSIM', device:'신규 단말', model:'iPhone 15 Pro', color:'256GB / 내추럴 티타늄', oem:'OEM-KT',
+   errortext:'eSIM 프로파일 다운로드 > "네트워크 오류가 발생했습니다." (ERR-4023)',
+   content:'eSIM 전환 요청 후 개통 완료 문자를 수신하였으나 실제 데이터 이용 불가 상태. 앱 재설치 및 재시도 3회 진행하였으나 동일 증상 지속.\n\n[확인] 개통 시스템 상 정상 처리 표기. eSIM 프로파일 다운로드 단계에서 오류 추정.\n\n[요청] eSIM 재발급 또는 USIM 전환 처리 요청.',
+   serial:'C02XR1ZHJGH7', imei1:'356938035643809', imei1tel:'KT', imei1sim:'eSIM', imei1use:'사용중', imei2:'356938035643810', imei2tel:'—', imei2sim:'미사용', imei2use:'—', eid:'89049032007008736251073446980358',
+   history:[{s:'new',who:'김고센',note:'VOC 등록',time:'2026.06.10 11:05'}],
+   comments:[{author:'나영채',org:'SK텔레콤 air서비스팀',date:'2026-06-01 00:08',type:'일반',body:'문의사항은 이쪽 댓글로 작성 부탁드립니다.<br>권한, 버그 문의는 나영채 매니저에게 연락 부탁드립니다.',reply:false},
+             {author:'최창환',org:'SKT air사업팀',date:'2026-06-01 18:26',type:'일반',body:'영재님 감사합니다.',reply:false},
+             {author:'한민진',org:'SKT air사업팀',date:'2026-06-10 14:22',type:'문의',body:'감사합니다.',reply:true}]},
+  {id:'V20260609-0045', title:'YTPL 프로모션 적용 오류 — 결제 완료 후에도 혜택 미반영, 고객 환불 요청 중', type:'promo', status:'hold', writer:'김고센', assignee:'한민진', regdate:'26.06.09',
+   customer:'김유리', phone:'010-4422-9981', userid:'kimyr_03', receive:'2026.06.09 13:40',
+   promoName:'YTPL 결합 프로모션', promoCode:'YTPL-2026-06', content:'결제 완료 후에도 혜택이 반영되지 않음. 환불 또는 재처리 요청.',
+   history:[{s:'new',who:'김고센',note:'VOC 등록',time:'2026.06.09 13:40'},{s:'review',who:'한민진 / SKT air사업팀',note:'확인 중',time:'2026.06.09 15:00'},{s:'hold',who:'한민진 / SKT air사업팀',note:'결제팀 확인 대기',time:'2026.06.09 17:20'}],
+   comments:[]},
+  {id:'V20260609-0044', title:'요금제 변경 후 부가서비스 자동 해지됨, 추가 비용 환불 요청 접수', type:'general', status:'done', writer:'김고센', assignee:'박도현', regdate:'26.06.09',
+   customer:'최준혁', phone:'010-9999-0001', userid:'choi_jh77', receive:'2026.06.09 10:02',
+   content:'요금제 변경 후 부가서비스가 자동 해지되어 추가 비용 환불을 요청함.',
+   history:[{s:'new',who:'김고센',note:'VOC 등록',time:'2026.06.09 10:02'},{s:'review',who:'박도현 / SKT air사업팀',note:'처리 시작',time:'2026.06.09 11:00'},{s:'done',who:'박도현 / SKT air사업팀',note:'환불 처리 완료',time:'2026.06.09 16:40'}],
+   comments:[]},
+  {id:'V20260608-0041', title:'신규 단말 개통 시 IMEI 등록 오류 발생 (iPhone 15 Pro, OEM-KT 모델)', type:'error', status:'hold', writer:'김고센', assignee:'이지연', regdate:'26.06.08',
+   customer:'정유나', phone:'010-5555-3312', userid:'jeong_yn', receive:'2026.06.08 16:18',
+   channel:'앱 (air)', telecom:'KT', sim:'eSIM', worktype:'신규가입', actsim:'eSIM', device:'신규 단말', model:'iPhone 15 Pro', color:'128GB / 블랙 티타늄', oem:'OEM-KT',
+   errortext:'IMEI 등록 단계 > "단말 정보를 확인할 수 없습니다" (ERR-2210)',
+   content:'신규 단말 개통 시 IMEI 등록 오류가 발생하여 개통이 진행되지 않음.', serial:'C02XR1BBB222', imei1:'356938035600099', imei1tel:'KT', imei1sim:'eSIM', imei1use:'사용중', imei2:'—', imei2tel:'—', imei2sim:'미사용', imei2use:'—', eid:'89049032007008700000099',
+   history:[{s:'new',who:'김고센',note:'VOC 등록',time:'2026.06.08 16:18'},{s:'hold',who:'이지연 / SKT air사업팀',note:'단말팀 확인 요청',time:'2026.06.08 17:50'}],
+   comments:[]}
+];
+let seq = 47;
+let currentEditingId = null;
+let currentViewId = null;
+let currentEditType = 'error';
+let currentSearchTab = '번호';
+let currentStatFilter = '전체';
+
+const statusLabel = {new:'접수', review:'처리중', done:'완료', hold:'보류'};
+const typeLabel = {error:'개통오류', promo:'프로모션', general:'일반VOC'};
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function goToList(){ showScreen('screen-list'); renderList(); }
+function goToEdit(){
+  currentEditingId = null;
+  resetEditForm();
+  document.getElementById('edit-title').textContent = 'VOC 등록';
+  showScreen('screen-edit');
+}
+function goToView(id){
+  currentViewId = id;
+  renderView(id);
+  showScreen('screen-view');
+}
+function editFromView(){
+  currentEditingId = currentViewId;
+  fillEditFormFromVoc(vocList.find(v=>v.id===currentViewId));
+  document.getElementById('edit-title').textContent = 'VOC 수정';
+  showScreen('screen-edit');
+}
+
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+function renderStatRow(){
+  const counts = {전체:vocList.length, 접수:0, 처리중:0, 보류:0, 완료:0};
+  vocList.forEach(v=>{ counts[statusLabel[v.status]]++; });
+  const keys = ['전체','접수','처리중','보류','완료'];
+  const row = document.getElementById('stat-row');
+  row.innerHTML = keys.map(k=>`<div class="stat-cell ${currentStatFilter===k?'active':''}" onclick="setStatFilter('${k}')"><div class="stat-num">${counts[k]}</div><div class="stat-lbl">${k}</div></div>`).join('');
+}
+function setStatFilter(k){ currentStatFilter = k; renderList(); }
+
+document.getElementById('search-tabs').addEventListener('click', e=>{
+  const tab = e.target.closest('.search-tab');
+  if(!tab) return;
+  document.querySelectorAll('.search-tab').forEach(t=>t.classList.remove('active'));
+  tab.classList.add('active');
+  currentSearchTab = tab.dataset.tab;
+  const ph = {번호:'VOC 번호 입력 (예: V20260610-0047)', 제목:'VOC 제목 입력', 담당자:'담당자 이름 입력', userid:'User ID 입력'};
+  document.getElementById('search-input').placeholder = ph[currentSearchTab];
+});
+
+function renderList(){
+  renderStatRow();
+  const q = document.getElementById('search-input').value.trim().toLowerCase();
+  let filtered = vocList.filter(v=>{
+    if(currentStatFilter!=='전체' && statusLabel[v.status]!==currentStatFilter) return false;
+    if(!q) return true;
+    if(currentSearchTab==='번호') return v.id.toLowerCase().includes(q);
+    if(currentSearchTab==='제목') return v.title.toLowerCase().includes(q);
+    if(currentSearchTab==='담당자') return (v.assignee||'').toLowerCase().includes(q);
+    if(currentSearchTab==='userid') return (v.userid||'').toLowerCase().includes(q);
+    return true;
+  });
+  filtered = filtered.slice().sort((a,b)=> b.id.localeCompare(a.id));
+
+  const body = document.getElementById('list-body');
+  if(filtered.length===0){
+    body.innerHTML = `<div class="empty-row">조건에 맞는 VOC가 없습니다.</div>`;
+    return;
+  }
+  body.innerHTML = filtered.map(v=>`
+    <div class="list-row" onclick="goToView('${v.id}')">
+      <div class="lr-id">${v.id}</div>
+      <div class="lr-title">${v.title}</div>
+      <div><span class="pill">${typeLabel[v.type]}</span></div>
+      <div><span class="pill">${statusLabel[v.status]}</span></div>
+      <div class="lr-text">${v.writer}</div>
+      <div class="lr-text">${v.assignee}</div>
+      <div class="lr-text">${v.regdate}</div>
+    </div>`).join('');
+}
+
+function resetEditForm(){
+  ['f-title','f-receive','f-assignee','f-customer','f-phone','f-userid',
+   'ef-channel','ef-telecom','ef-sim','ef-worktype','ef-actsim','ef-device','ef-model','ef-color','ef-oem','ef-errortext','ef-serial',
+   'ef-imei1','ef-imei1-tel','ef-imei1-sim','ef-imei1-use','ef-imei2','ef-imei2-tel','ef-imei2-sim','ef-imei2-use','ef-eid',
+   'pf-name','pf-code'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  ['ef-content','pf-content','gf-content'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  setEditType('error');
+}
+function fillEditFormFromVoc(v){
+  document.getElementById('f-title').value = v.title;
+  document.getElementById('f-receive').value = v.receive||'';
+  document.getElementById('f-assignee').value = v.assignee==='미배정'?'':v.assignee;
+  document.getElementById('f-customer').value = v.customer||'';
+  document.getElementById('f-phone').value = v.phone||'';
+  document.getElementById('f-userid').value = v.userid||'';
+  setEditType(v.type);
+  if(v.type==='error'){
+    document.getElementById('ef-channel').value=v.channel||'';
+    document.getElementById('ef-telecom').value=v.telecom||'';
+    document.getElementById('ef-sim').value=v.sim||'';
+    document.getElementById('ef-worktype').value=v.worktype||'';
+    document.getElementById('ef-actsim').value=v.actsim||'';
+    document.getElementById('ef-device').value=v.device||'';
+    document.getElementById('ef-model').value=v.model||'';
+    document.getElementById('ef-color').value=v.color||'';
+    document.getElementById('ef-oem').value=v.oem||'';
+    document.getElementById('ef-errortext').value=v.errortext||'';
+    document.getElementById('ef-content').value=v.content||'';
+    document.getElementById('ef-serial').value=v.serial||'';
+    document.getElementById('ef-imei1').value=v.imei1||'';
+    document.getElementById('ef-imei1-tel').value=v.imei1tel||'';
+    document.getElementById('ef-imei1-sim').value=v.imei1sim||'';
+    document.getElementById('ef-imei1-use').value=v.imei1use||'';
+    document.getElementById('ef-imei2').value=v.imei2||'';
+    document.getElementById('ef-imei2-tel').value=v.imei2tel||'';
+    document.getElementById('ef-imei2-sim').value=v.imei2sim||'';
+    document.getElementById('ef-imei2-use').value=v.imei2use||'';
+    document.getElementById('ef-eid').value=v.eid||'';
+  } else if(v.type==='promo'){
+    document.getElementById('pf-name').value=v.promoName||'';
+    document.getElementById('pf-code').value=v.promoCode||'';
+    document.getElementById('pf-content').value=v.content||'';
+  } else {
+    document.getElementById('gf-content').value=v.content||'';
+  }
+}
+function setEditType(t){
+  currentEditType = t;
+  document.getElementById('e-sub-error').style.display = t==='error'?'block':'none';
+  document.getElementById('e-sub-promo').style.display = t==='promo'?'block':'none';
+  document.getElementById('e-sub-general').style.display = t==='general'?'block':'none';
+  document.getElementById('e-error').className='tp'+(t==='error'?' error-on':'');
+  document.getElementById('e-promo').className='tp'+(t==='promo'?' promo-on':'');
+  document.getElementById('e-general').className='tp'+(t==='general'?' general-on':'');
+}
+
+function saveVoc(){
+  const title = document.getElementById('f-title').value.trim();
+  if(!title){ toast('VOC 제목을 입력해 주세요.'); document.getElementById('f-title').focus(); return; }
+
+  const base = {
+    title,
+    receive: document.getElementById('f-receive').value.trim(),
+    assignee: document.getElementById('f-assignee').value.trim() || '미배정',
+    customer: document.getElementById('f-customer').value.trim(),
+    phone: document.getElementById('f-phone').value.trim(),
+    userid: document.getElementById('f-userid').value.trim(),
+    type: currentEditType
+  };
+  if(currentEditType==='error'){
+    Object.assign(base,{
+      channel:document.getElementById('ef-channel').value, telecom:document.getElementById('ef-telecom').value, sim:document.getElementById('ef-sim').value,
+      worktype:document.getElementById('ef-worktype').value, actsim:document.getElementById('ef-actsim').value, device:document.getElementById('ef-device').value,
+      model:document.getElementById('ef-model').value, color:document.getElementById('ef-color').value, oem:document.getElementById('ef-oem').value,
+      errortext:document.getElementById('ef-errortext').value, content:document.getElementById('ef-content').value,
+      serial:document.getElementById('ef-serial').value,
+      imei1:document.getElementById('ef-imei1').value, imei1tel:document.getElementById('ef-imei1-tel').value, imei1sim:document.getElementById('ef-imei1-sim').value, imei1use:document.getElementById('ef-imei1-use').value,
+      imei2:document.getElementById('ef-imei2').value, imei2tel:document.getElementById('ef-imei2-tel').value, imei2sim:document.getElementById('ef-imei2-sim').value, imei2use:document.getElementById('ef-imei2-use').value,
+      eid:document.getElementById('ef-eid').value
+    });
+  } else if(currentEditType==='promo'){
+    Object.assign(base,{ promoName:document.getElementById('pf-name').value, promoCode:document.getElementById('pf-code').value, content:document.getElementById('pf-content').value });
+  } else {
+    Object.assign(base,{ content:document.getElementById('gf-content').value });
+  }
+
+  const today = new Date(2026,5,16);
+  const ymd = `${today.getFullYear()}${String(today.getMonth()+1).padStart(2,'0')}${String(today.getDate()).padStart(2,'0')}`;
+  const regdate = `${String(today.getFullYear()).slice(2)}.${String(today.getMonth()+1).padStart(2,'0')}.${String(today.getDate()).padStart(2,'0')}`;
+
+  if(currentEditingId){
+    const idx = vocList.findIndex(v=>v.id===currentEditingId);
+    vocList[idx] = Object.assign({}, vocList[idx], base);
+    toast('VOC가 수정되었습니다.');
+    goToView(currentEditingId);
+  } else {
+    seq++;
+    const newId = `V${ymd}-${String(seq).padStart(4,'0')}`;
+    const newVoc = Object.assign({
+      id:newId, status:'new', writer:'김고센', regdate,
+      history:[{s:'new',who:'김고센',note:'VOC 등록',time:`${today.getFullYear()}.${String(today.getMonth()+1).padStart(2,'0')}.${String(today.getDate()).padStart(2,'0')} 09:00`}],
+      comments:[]
+    }, base);
+    vocList.unshift(newVoc);
+    toast(`VOC가 등록되었습니다. (${newId})`);
+    goToView(newId);
+  }
+}
+
+function renderView(id){
+  const v = vocList.find(x=>x.id===id);
+  if(!v) return;
+  document.getElementById('view-id').textContent = `${v.id} · ${v.title.length>20?v.title.slice(0,20)+'…':v.title}`;
+  document.getElementById('view-title').textContent = v.title;
+  document.getElementById('view-receive').textContent = v.receive || '-';
+  document.getElementById('view-regdate').textContent = v.regdate;
+  document.getElementById('view-assignee').textContent = v.assignee;
+  document.getElementById('view-assignee').className = 'sm-value' + (v.assignee==='미배정'?' muted':'');
+  document.getElementById('view-assignee2').textContent = v.assignee==='미배정' ? '선택된 담당자 없음' : v.assignee + ' / SKT air사업팀';
+  document.getElementById('view-warn').style.display = v.assignee==='미배정' ? 'flex' : 'none';
+  document.getElementById('view-customer').textContent = v.customer || '-';
+  document.getElementById('view-phone').textContent = v.phone || '-';
+  document.getElementById('view-userid').textContent = v.userid || '-';
+
+  document.querySelectorAll('#status-btns .s-btn').forEach(b=>{ b.className='s-btn'+(b.dataset.s===v.status?' cur-'+v.status:''); });
+
+  document.getElementById('history-rows').innerHTML = v.history.map(h=>`<tr><td><span class="hbadge">${statusLabel[h.s]}</span></td><td>${h.who}</td><td>${h.note}</td><td>${h.time}</td></tr>`).join('');
+
+  ['error','promo','general'].forEach(t=>{
+    document.getElementById('v-sub-'+t).style.display = v.type===t?'block':'none';
+    document.getElementById('v-'+t).className = 'tp'+(v.type===t?' '+t+'-on':'');
+  });
+  if(v.type==='error'){
+    document.getElementById('vv-channel').textContent=v.channel||'-';
+    document.getElementById('vv-telecom').textContent=v.telecom||'-';
+    document.getElementById('vv-sim').textContent=v.sim||'-';
+    document.getElementById('vv-worktype').textContent=v.worktype||'-';
+    document.getElementById('vv-actsim').textContent=v.actsim||'-';
+    document.getElementById('vv-device').textContent=v.device||'-';
+    document.getElementById('vv-model').textContent=v.model||'-';
+    document.getElementById('vv-color').textContent=v.color||'-';
+    document.getElementById('vv-oem').textContent=v.oem||'-';
+    document.getElementById('vv-errortext').textContent=v.errortext||'-';
+    document.getElementById('vv-content').textContent=v.content||'-';
+    document.getElementById('vv-serial').textContent=v.serial||'-';
+    document.getElementById('vv-imei1').textContent=v.imei1||'-';
+    document.getElementById('vv-imei1-tel').textContent=v.imei1tel||'-';
+    document.getElementById('vv-imei1-sim').textContent=v.imei1sim||'-';
+    document.getElementById('vv-imei1-use').textContent=v.imei1use||'-';
+    document.getElementById('vv-imei2').textContent=v.imei2||'-';
+    document.getElementById('vv-imei2-tel').textContent=v.imei2tel||'-';
+    document.getElementById('vv-imei2-sim').textContent=v.imei2sim||'-';
+    document.getElementById('vv-imei2-use').textContent=v.imei2use||'-';
+    document.getElementById('vv-eid').textContent=v.eid||'-';
+  } else if(v.type==='promo'){
+    document.getElementById('vp-name').textContent=v.promoName||'-';
+    document.getElementById('vp-code').textContent=v.promoCode||'-';
+    document.getElementById('vp-content').textContent=v.content||'-';
+  } else {
+    document.getElementById('vg-content').textContent=v.content||'-';
+  }
+
+  renderComments(v);
+}
+
+function changeStatus(t){
+  const v = vocList.find(x=>x.id===currentViewId);
+  if(!v || v.status===t) return;
+  v.status = t;
+  v.history.push({s:t, who:'한민진 / SKT air사업팀', note:'상태 변경', time:'2026.06.16 14:32'});
+  renderView(currentViewId);
+  toast(`상태가 "${statusLabel[t]}"(으)로 변경되었습니다.`);
+}
+
+function deleteVoc(){
+  if(!confirm('이 VOC를 삭제하시겠습니까? 삭제 후 복구할 수 없습니다.')) return;
+  vocList = vocList.filter(v=>v.id!==currentViewId);
+  toast('VOC가 삭제되었습니다.');
+  goToList();
+}
+
+function renderComments(v){
+  const list = document.getElementById('comment-list');
+  list.innerHTML = v.comments.map((c,i)=>`
+    <div class="ci ${c.reply?'reply':''}">
+      <div class="ci-hd">
+        <span class="cmt-badge">${c.type}</span>
+        <span class="ci-author">${c.author}</span><span class="ci-org">/ ${c.org}</span><span class="ci-date">${c.date}</span>
+        <div style="flex:1"></div>
+        ${c.reply ? `<button class="ci-act" onclick="toast('수정 기능 (구현 예정)')">✏ 수정</button><button class="ci-act" style="color:#A32D2D" onclick="deleteComment(${i})">🗑 삭제</button>`
+                   : `<button class="ci-act" onclick="toggleReply(${i})">↩ 답글</button>`}
+      </div>
+      <div class="ci-body">${c.body}</div>
+    </div>
+    ${!c.reply ? `<div class="reply-form" id="rf-${i}">
+      <textarea class="reply-ta" id="rf-ta-${i}" placeholder="답글을 입력해 주세요."></textarea>
+      <div class="reply-foot"><button class="cancel-link" onclick="toggleReply(${i})">취소</button><button class="cmt-submit" onclick="submitReply(${i})">등록</button></div>
+    </div>` : ''}
+  `).join('');
+}
+function toggleReply(i){
+  const el = document.getElementById('rf-'+i);
+  el.classList.toggle('open');
+  if(el.classList.contains('open')) el.querySelector('textarea').focus();
+}
+function submitReply(i){
+  const v = vocList.find(x=>x.id===currentViewId);
+  const text = document.getElementById('rf-ta-'+i).value.trim();
+  if(!text){ toast('답글 내용을 입력해 주세요.'); return; }
+  v.comments.splice(i+1,0,{author:'한민진',org:'SKT air사업팀',date:'2026-06-16 14:35',type:'일반',body:text,reply:true});
+  renderComments(v);
+  toast('답글이 등록되었습니다.');
+}
+function addComment(){
+  const v = vocList.find(x=>x.id===currentViewId);
+  const text = document.getElementById('cmt-text').value.trim();
+  if(!text){ toast('댓글 내용을 입력해 주세요.'); return; }
+  const type = document.getElementById('cmt-type').value;
+  v.comments.push({author:'한민진',org:'SKT air사업팀',date:'2026-06-16 14:35',type,body:text,reply:false});
+  document.getElementById('cmt-text').value='';
+  renderComments(v);
+  toast('댓글이 등록되었습니다.');
+}
+function deleteComment(i){
+  if(!confirm('댓글을 삭제하시겠습니까?')) return;
+  const v = vocList.find(x=>x.id===currentViewId);
+  v.comments.splice(i,1);
+  renderComments(v);
+  toast('댓글이 삭제되었습니다.');
+}
+
+renderList();
+</script>
+</body>
+</html>
