@@ -128,27 +128,20 @@
       line-height: 1;
     }
 
-    /* ── 상담 종료 화면 ── */
-    .end-screen {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      flex: 1;
-      background: #f6f6f6;
-      padding: 32px 24px;
+    /* ── 상담 종료 — 채팅 바디 하단 append ── */
+    .end-append {
+      margin-top: 20px;
       text-align: center;
     }
-    .end-screen.active { display: flex; }
     .end-msg-box {
       background: #ebebeb;
       border-radius: 10px;
-      padding: 20px 24px;
+      padding: 18px 20px;
       font-size: 13px;
       color: #555;
       line-height: 1.8;
-      margin-bottom: 24px;
-      width: 100%;
+      margin-bottom: 18px;
+      text-align: center;
     }
     .end-restart-btn {
       padding: 13px 36px;
@@ -686,28 +679,49 @@
     </div>
   </div>
 
-  <!-- ══════════ 상담 종료 화면 ══════════ -->
-  <div class="end-screen" id="endScreen">
-    <div class="end-msg-box">
-      고객님, 챗봇과의 상담이 종료되었습니다.<br>
-      챗봇과 대화를 다시 시작하고 싶으시면,<br>
-      아래 버튼을 눌러주세요.
-    </div>
-    <button class="end-restart-btn" onclick="restartChat()">챗봇 시작하기</button>
-  </div>
 
 </div><!-- /chat-window -->
 
 <script>
   /* ── 상담 종료 / 재시작 ── */
   function endChat() {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById('endScreen').classList.add('active');
-    document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
+    // 이미 종료 블록이 있으면 중복 방지
+    if (document.getElementById('endAppend')) return;
+
+    const activeScreen = document.querySelector('.screen.active');
+    if (!activeScreen) return;
+
+    // 현재 화면의 네비게이션 버튼 숨김
+    activeScreen.querySelectorAll('.card-nav').forEach(el => el.style.display = 'none');
+
+    // 종료 메시지 블록을 chat-body 하단에 append
+    const chatBody = activeScreen.querySelector('.chat-body');
+    const endEl = document.createElement('div');
+    endEl.id = 'endAppend';
+    endEl.className = 'end-append';
+    endEl.innerHTML = `
+      <div class="end-msg-box">
+        고객님, 챗봇과의 상담이 종료되었습니다.<br>
+        챗봇과 대화를 다시 시작하고 싶으시면,<br>
+        아래 버튼을 눌러주세요.
+      </div>
+      <button class="end-restart-btn" onclick="restartChat()">챗봇 시작하기</button>
+    `;
+    chatBody.appendChild(endEl);
+
+    // 스크롤을 하단으로
+    setTimeout(() => { chatBody.scrollTop = chatBody.scrollHeight; }, 50);
   }
 
   function restartChat() {
-    document.getElementById('endScreen').classList.remove('active');
+    // 종료 블록 제거
+    const endEl = document.getElementById('endAppend');
+    if (endEl) endEl.remove();
+
+    // 숨겼던 네비 버튼 복원
+    document.querySelectorAll('.card-nav').forEach(el => el.style.display = '');
+
+    // 캐러셀 초기화 후 1Depth로
     cur = 0;
     document.getElementById('cTrack').style.transform = 'translateX(0)';
     document.getElementById('arrowL').classList.add('hidden');
