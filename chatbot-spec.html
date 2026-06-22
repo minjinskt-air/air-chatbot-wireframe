@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>air 채팅 상담 챗봇 기능명세서</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', Arial, sans-serif;
+      font-size: 14px;
+      color: #222;
+      background: #f8f8f8;
+      padding: 40px 20px 80px;
+    }
+
+    /* ── 문서 컨테이너 ── */
+    .doc {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    /* ── 표지 ── */
+    .cover {
+      background: #1a1a2e;
+      color: #fff;
+      padding: 48px 48px 40px;
+      border-radius: 4px 4px 0 0;
+    }
+    .cover-badge {
+      display: inline-block;
+      background: rgba(255,255,255,.15);
+      color: #ccc;
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+    .cover h1 { font-size: 26px; font-weight: 700; margin-bottom: 8px; }
+    .cover .subtitle { font-size: 14px; color: #aaa; margin-bottom: 32px; }
+    .cover-meta {
+      display: flex;
+      gap: 32px;
+      font-size: 12px;
+      color: #bbb;
+      border-top: 1px solid rgba(255,255,255,.1);
+      padding-top: 20px;
+    }
+    .cover-meta span { color: #fff; display: block; font-size: 13px; margin-top: 3px; }
+
+    /* ── 본문 ── */
+    .body { padding: 0 48px 48px; }
+
+    /* ── 섹션 ── */
+    .section { margin-top: 48px; }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #1a1a2e;
+    }
+    .section-num {
+      width: 28px; height: 28px;
+      background: #1a1a2e;
+      color: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700;
+      flex-shrink: 0;
+    }
+    .section-title { font-size: 17px; font-weight: 700; color: #1a1a2e; }
+
+    /* ── 서브섹션 ── */
+    .sub { margin-top: 24px; }
+    .sub-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 12px;
+      padding-left: 10px;
+      border-left: 3px solid #4a90d9;
+    }
+
+    /* ── 테이블 ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+    thead tr { background: #f0f2f5; }
+    th {
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 700;
+      color: #444;
+      border: 1px solid #ddd;
+      white-space: nowrap;
+    }
+    td {
+      padding: 9px 14px;
+      border: 1px solid #e5e5e5;
+      color: #444;
+      line-height: 1.6;
+      vertical-align: top;
+    }
+    tr:nth-child(even) td { background: #fafafa; }
+    td.label { font-weight: 600; color: #222; white-space: nowrap; }
+    td code {
+      background: #f0f2f5;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-size: 12px;
+      color: #c0392b;
+      font-family: monospace;
+    }
+
+    /* ── 배지 ── */
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+    .badge-blue  { background: #e8f0fe; color: #1a73e8; }
+    .badge-green { background: #e6f4ea; color: #1e8e3e; }
+    .badge-gray  { background: #f0f2f5; color: #666; }
+    .badge-orange{ background: #fef3e2; color: #e37400; }
+
+    /* ── 플로우 다이어그램 ── */
+    .flow {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin: 16px 0;
+      overflow-x: auto;
+    }
+    .flow-node {
+      flex-shrink: 0;
+      background: #f0f4ff;
+      border: 1.5px solid #4a90d9;
+      border-radius: 8px;
+      padding: 12px 16px;
+      text-align: center;
+      min-width: 130px;
+    }
+    .flow-node .fn-label { font-size: 11px; color: #888; margin-bottom: 3px; }
+    .flow-node .fn-title { font-size: 13px; font-weight: 700; color: #1a1a2e; }
+    .flow-node .fn-sub   { font-size: 11px; color: #666; margin-top: 3px; }
+    .flow-arrow {
+      font-size: 20px; color: #aaa;
+      padding: 0 8px;
+      flex-shrink: 0;
+    }
+    .flow-node.terminal {
+      background: #fff5e6;
+      border-color: #e8a020;
+    }
+
+    /* ── 설명 텍스트 ── */
+    p.desc {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+    ul.spec-list {
+      padding-left: 18px;
+      font-size: 13px;
+      color: #444;
+      line-height: 1.8;
+    }
+    ul.spec-list li { margin-bottom: 2px; }
+
+    /* ── 구분선 ── */
+    hr { border: none; border-top: 1px solid #eee; margin: 32px 0; }
+
+    /* ── 노트 박스 ── */
+    .note {
+      background: #fffbea;
+      border-left: 3px solid #f5a623;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #666;
+      border-radius: 0 4px 4px 0;
+      margin-top: 10px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+<div class="doc">
+
+  <!-- ══════ 표지 ══════ -->
+  <div class="cover">
+    <div class="cover-badge">기능명세서 v1.0</div>
+    <h1>air 채팅 상담 챗봇</h1>
+    <p class="subtitle">FAQ 시나리오 챗봇 · 화면설계 기능명세서</p>
+    <div class="cover-meta">
+      <div>작성일<span>2026-06-22</span></div>
+      <div>버전<span>feature/v2</span></div>
+      <div>작성자<span>air 서비스 기획</span></div>
+      <div>배포 URL<span>minjinskt-air.github.io/air-chatbot-wireframe</span></div>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- ══════ 1. 개요 ══════ -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <div class="section-title">서비스 개요</div>
+      </div>
+
+      <table>
+        <tr><td class="label" style="width:160px">서비스명</td><td>air 채팅 상담 FAQ 챗봇</td></tr>
+        <tr><td class="label">목적</td><td>고객이 자주 묻는 질문(FAQ)을 카테고리 선택 방식으로 스스로 탐색하고 답변을 확인할 수 있는 시나리오형 챗봇 제공</td></tr>
+        <tr><td class="label">화면 유형</td><td>채팅 상담 팝업 (웹뷰 / 모바일 브라우저)</td></tr>
+        <tr><td class="label">탐색 방식</td><td>3단계 Depth 구조 (대주제 → 세부주제 → 상세 답변)</td></tr>
+        <tr><td class="label">상담사 연결</td><td>FAQ 답변 확인 후 채팅 상담사 연결 가능</td></tr>
+      </table>
+    </div>
+
+    <!-- ══════ 2. 화면 흐름 ══════ -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <div class="section-title">화면 흐름 (User Flow)</div>
+      </div>
+
+      <div class="flow">
+        <div class="flow-node">
+          <div class="fn-label">진입</div>
+          <div class="fn-title">챗봇 진입</div>
+          <div class="fn-sub">채팅 창 오픈</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">
+          <div class="fn-label">1 Depth</div>
+          <div class="fn-title">대주제 선택</div>
+          <div class="fn-sub">캐러셀 카드</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">
+          <div class="fn-label">2 Depth</div>
+          <div class="fn-title">세부주제 선택</div>
+          <div class="fn-sub">버튼 선택</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">
+          <div class="fn-label">3 Depth</div>
+          <div class="fn-title">상세 답변 확인</div>
+          <div class="fn-sub">더보기 가능</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node terminal">
+          <div class="fn-label">종료/전환</div>
+          <div class="fn-title">상담사 연결</div>
+          <div class="fn-sub">또는 처음으로</div>
+        </div>
+      </div>
+
+      <div class="note">
+        ※ 각 단계에서 "이전으로" 버튼으로 직전 Depth로 복귀 가능하며, "처음으로" 버튼으로 1Depth 초기 상태로 이동합니다.
+      </div>
+    </div>
+
+    <!-- ══════ 3. 공통 UI 요소 ══════ -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <div class="section-title">공통 UI 요소</div>
+      </div>
+
+      <div class="sub">
+        <div class="sub-title">3-1. 헤더</div>
+        <table>
+          <thead><tr><th>구성요소</th><th>설명</th><th>비고</th></tr></thead>
+          <tbody>
+            <tr><td class="label">프로필 이미지</td><td>상담 캐릭터 아바타 (원형, 42×42px)</td><td>chatbot@3x.png</td></tr>
+            <tr><td class="label">타이틀</td><td>"air 채팅 상담" 고정 텍스트</td><td>font-weight: 700</td></tr>
+            <tr><td class="label">상태 표시</td><td>● Online — 상담 가능 상태 표시</td><td>회색 dot</td></tr>
+            <tr><td class="label">닫기 버튼</td><td>✕ 아이콘, 창 닫기 처리</td><td>우측 상단 고정</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sub">
+        <div class="sub-title">3-2. 입력창 (하단 고정)</div>
+        <table>
+          <thead><tr><th>구성요소</th><th>설명</th><th>비고</th></tr></thead>
+          <tbody>
+            <tr><td class="label">+ 버튼</td><td>파일 첨부 등 확장 기능 진입점</td><td>v2 미구현(UI 표시만)</td></tr>
+            <tr><td class="label">텍스트 입력</td><td>사용자 메시지 입력 필드</td><td>시나리오 단계에서 비활성화 고려</td></tr>
+            <tr><td class="label">전송 버튼</td><td>메시지 전송 트리거</td><td>회색 박스 아이콘</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sub">
+        <div class="sub-title">3-3. 카테고리 칩 (2·3 Depth 공통)</div>
+        <table>
+          <thead><tr><th>구성요소</th><th>설명</th></tr></thead>
+          <tbody>
+            <tr><td class="label">위치</td><td>채팅 바디 우측 상단 (사용자 발화 말풍선 스타일)</td></tr>
+            <tr><td class="label">내용</td><td>현재 선택된 대주제 카테고리명 표시</td></tr>
+            <tr><td class="label">동작</td><td>표시 전용 (클릭 불가)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════ 4. 1 Depth ══════ -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">4</div>
+        <div class="section-title">1 Depth — 대주제 캐러셀 선택</div>
+      </div>
+
+      <p class="desc">챗봇 최초 진입 시 노출되는 화면. FAQ 카테고리를 캐러셀 카드 형태로 제공하며, 좌우 스와이프 또는 화살표로 탐색한다.</p>
+
+      <div class="sub">
+        <div class="sub-title">4-1. 캐러셀 카드 구성</div>
+        <table>
+          <thead><tr><th>카드 번호</th><th>카드 제목</th><th>제공 질문 목록</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="label">카드 0</td>
+              <td>자주 묻는 질문 <span class="badge badge-gray">FAQ 목록</span></td>
+              <td>air 회원 가입 / 포인트 적립·사용 / 요금 납부·해지 / eSIM·USIM</td>
+            </tr>
+            <tr>
+              <td class="label">카드 1</td>
+              <td>air 회원 가입</td>
+              <td>air 가입 조건 / T→air 전환 혜택 / 친구초대 혜택</td>
+            </tr>
+            <tr>
+              <td class="label">카드 2</td>
+              <td>포인트 적립·사용</td>
+              <td>포인트 요금 할인 / 적립·사용 방법 / 포인트샵 교환 상품</td>
+            </tr>
+            <tr>
+              <td class="label">카드 3</td>
+              <td>요금 납부·해지</td>
+              <td>자동납부 변경 / 납부 내역 확인 / 해지 신청 방법</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sub">
+        <div class="sub-title">4-2. 캐러셀 인터랙션</div>
+        <table>
+          <thead><tr><th>항목</th><th>명세</th></tr></thead>
+          <tbody>
+            <tr><td class="label">카드 폭</td><td>270px 고정. 우측 약 66px 다음 카드 미리보기(peek) 노출</td></tr>
+            <tr><td class="label">좌우 화살표</td><td>첫 카드: 좌 화살표 숨김 / 마지막 카드: 우 화살표 숨김</td></tr>
+            <tr><td class="label">페이지 인디케이터</td><td>카드 하단 dot(●) 4개, 현재 위치 강조</td></tr>
+            <tr><td class="label">우측 페이드</td><td>우측 48px 그라데이션 오버레이로 추가 카드 존재 암시</td></tr>
+            <tr><td class="label">슬라이드 단위</td><td>카드 폭(270) + 간격(10) = 280px</td></tr>
+            <tr><td class="label">애니메이션</td><td>cubic-bezier(.4,0,.2,1) 320ms transition</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sub">
+        <div class="sub-title">4-3. 카드 내 버튼 동작</div>
+        <table>
+          <thead><tr><th>동작</th><th>결과</th></tr></thead>
+          <tbody>
+            <tr><td class="label">카드 내 항목 버튼 클릭</td><td>해당 카테고리·질문으로 2 Depth 이동</td></tr>
+            <tr><td class="label">카드 0 항목 클릭</td><td>선택한 대주제의 2 Depth 진입 (질문 목록 표시)</td></tr>
+            <tr><td class="label">카드 1~3 항목 클릭</td><td>해당 질문 인덱스를 갖고 2 Depth 진입 후 즉시 3 Depth 이동</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sub">
+        <div class="sub-title">4-4. 하단 네비게이션</div>
+        <div class="note">1 Depth에는 "이전으로 / 처음으로" 버튼 없음. 최초 진입 화면이므로 네비게이션 불필요.</div>
+      </div>
+    </div>
+
+    <!-- ══════ 5. 2 Depth ══════ -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">5</div>
+        <div class="section-title">2 Depth — 세부주제(질문) 선택</div>
+      </div>
+
+      <p class="desc">선택된 대주제 카테고리에 속한 FAQ 질문 목록을 하나의 카드 안에 제공한다. 봇 메시지와 선택 버튼이 동일 카드 내에 포함된다.</p>
+
+      <div class="sub">
+        <div class="sub-title">5-1. 통합 카드 구성</div>
+        <table>
+          <thead><tr><th>구성요소</th><th>위치</th><th>설명</th></tr></thead>
+          <tbody>
+            <tr><td class="label">카드 배경</td><td>전체</td><td>#e8e8e8 회색 배경, border-radius 14px</td></tr>
+            <tr><td class="label">봇 아바타</td><td>카드 헤더 좌측</td><td>흰색 원형 38×38px (빈 상태)</td></tr>
+            <tr><td class="label">카테고리 제목</td><td>카드 헤더 우측</td><td>선택된 대주제명, font-weight 700</td></tr>
+            <tr><td class="label">안내 문구</td><td>헤더 하단</td><td>카테고리별 고정 안내 텍스트</td></tr>
+            <tr><td class="label">질문 버튼 목록</td><td>카드 하단부</td><td>카테고리별 3개 질문 버튼 (흰색 배경, border)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sub">
+        <div class="sub-title">5-2. 질문 버튼 동작</div>
+        <table>
+          <thead><tr><th>항목</th><th>명세</th></tr></thead>
+          <tbody>
+            <tr><td class="label">버튼 수</td><td>카테고리당 3개 고정</td></tr>
+            <tr><td class="label">버튼 텍스트</td><td>실제 FAQ 질문 전문 표시</td></tr>
+            <tr><td class="label">클릭 동작</td><td>해당 질문 인덱스를 전달하여 3 Depth 이동</td></tr>
+            <tr><td class="label">hover 상태</td><td>배경 #f5f5f5, 테두리 #bbb</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sub">
+        <div class="sub-title">5-3. 하단 네비게이션 (캡션형)</div>
+        <table>
+          <thead><tr><th>버튼</th><th>동작</th><th>스타일</th></tr></thead>
+          <tbody>
+            <tr><td class="label">이전으로</td><td>1 Depth로 복귀</td><td>흰색 배경, 회색 테두리, 라운드 버튼</td></tr>
+            <tr><td class="label">처음으로</td><td>1 Depth로 복귀 (이전으로와 동일)</td><td>동일</td></tr>
+          </tbody>
+        </table>
+        <div class="note">※ 네비게이션 버튼은 고정 하단 바가 아닌 카드 바로 아래 인라인 배치 (캡션 스타일)</div>
+      </div>
+    </div>
+
+    <!-- ══════ 6. 3 Depth ══════ -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">6</div>
+        <div class="section-title">3 Depth — 상세 답변 확인</div>
+      </div>
+
+      <p class="desc">선택한 질문에 대한 상세 답변을 카드 형태로 제공한다. 긴 답변은 더보기로 확장하며, 추가 상담이 필요한 경우 채팅 상담사 연결을 제공한다.</p>
+
+      <div class="sub">
+        <div class="sub-title">6-1. 상세 카드 구성</div>
+        <table>
+          <thead><tr><th>구성요소</th><th>위치</th><th>설명</th></tr></thead>
+          <tbody>
+            <tr><td class="label">질문 제목</td><td>카드 최상단</td><td>선택한 질문 텍스트 전문, font-weight 700</td></tr>
+            <tr><td class="label">답변 목록</td><td>제목 하단</td><td>줄 단위 bullet(·) 리스트로 표시</td></tr>
+            <tr><td class="label">더보기 버튼</td><td>답변 하단</td><td>접기/펼치기 토글. 기본 접힘 상태</td></tr>
+            <tr><td class="label">채팅상담사 연결하기</td><td>더보기 아래</td><td>카드 내 최하단 행, 구분선(border-top) 위에 배치</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sub">
+        <div class="sub-title">6-2. 채팅상담사 연결하기</div>
+        <table>
+          <thead><tr><th>항목</th><th>명세</th></tr></thead>
+          <tbody>
+            <tr><td class="label">버튼 위치</td><td>상세 카드 내부 최하단 (더보기 아래 행)</td></tr>
+            <tr><td class="label">클릭 동작</td><td>SKT air 웹채팅 URL 팝업 오픈</td></tr>
+            <tr><td class="label">팝업 URL</td><td><code>https://mw-aicc.sktelecom.com/msgfe/chatWrap?popUp=true&id=AIRWEBCH01</code></td></tr>
+            <tr><td class="label">팝업 크기</td><td>width: 400px / height: 700px</td></tr>
+            <tr><td class="label">오픈 방식</td><td><code>window.open(url, '_blank', 'width=400,height=700')</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sub">
+        <div class="sub-title">6-3. 더보기 토글</div>
+        <table>
+          <thead><tr><th>상태</th><th>표시</th><th>동작</th></tr></thead>
+          <tbody>
+            <tr><td class="label">기본 (접힘)</td><td>더보기 ∨</td><td>클릭 시 추가 내용 펼침</td></tr>
+            <tr><td class="label">펼침</td><td>접기 ∧</td><td>클릭 시 초기 상태로 복귀</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sub">
+        <div class="sub-title">6-4. 하단 네비게이션 (캡션형)</div>
+        <table>
+          <thead><tr><th>버튼</th><th>동작</th></tr></thead>
+          <tbody>
+            <tr><td class="label">이전으로</td><td>2 Depth (질문 목록)으로 복귀</td></tr>
+            <tr><td class="label">처음으로</td><td>1 Depth (캐러셀 초기 화면)으로 복귀</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════ 7. FAQ 데이터 ══════ -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">7</div>
+        <div class="section-title">FAQ 데이터 명세</div>
+      </div>
+
+      <!-- 7-1 air 회원 가입 -->
+      <div class="sub">
+        <div class="sub-title">7-1. air 회원 가입</div>
+        <table>
+          <thead><tr><th style="width:40%">질문</th><th>답변 요약</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="label">air 가입 조건이 어떻게 되나요?</td>
+              <td>19세 이상 대한민국 국적 성인만 가입 가능. 외국인·미성년자 불가. 1인 1회선 제한, 2nd·멀티·테더링·쉐어링 불가.</td>
+            </tr>
+            <tr>
+              <td class="label">T에서 air로 전환하면 기존 혜택은 어떻게 되나요?</td>
+              <td>결합·약정할인 불가, T멤버십 불가, 로밍·데이터 쿠폰 삭제, SKT 장기혜택 상실, 로밍 상품 혜택 미제공 등.</td>
+            </tr>
+            <tr>
+              <td class="label">회원가입 시 친구초대 혜택 알려주세요</td>
+              <td>가입 48시간 내 초대코드 입력 시 초대자·피초대자 각 1,000p 적립. 최대 20명까지 적립 가능.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 7-2 포인트 -->
+      <div class="sub">
+        <div class="sub-title">7-2. 포인트 적립·사용</div>
+        <table>
+          <thead><tr><th style="width:40%">질문</th><th>답변 요약</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="label">포인트로 요금을 할인받을 수 있나요?</td>
+              <td>적립 포인트로 요금 할인 가능. 월 최대 5,000포인트 한도.</td>
+            </tr>
+            <tr>
+              <td class="label">포인트 적립과 사용 방법을 알려주세요</td>
+              <td>맞벌기·오늘의 픽·포인트 미션 등 혜택 프로그램으로 적립. 1포인트부터 사용 가능 (air 요금제 가입 고객 한정).</td>
+            </tr>
+            <tr>
+              <td class="label">포인트샵에서 어떤 상품으로 교환할 수 있나요?</td>
+              <td>상품권, 편의점·백화점·식음료 모바일상품권 구매 가능. 브랜드 지속 추가 예정.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 7-3 요금 납부 -->
+      <div class="sub">
+        <div class="sub-title">7-3. 요금 납부·해지</div>
+        <table>
+          <thead><tr><th style="width:40%">질문</th><th>답변 요약</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="label">요금 자동납부 방법을 변경하고 싶어요</td>
+              <td>air App → 전체 → 멤버십 요금안 → 납부 방법 변경 → 변경하기</td>
+            </tr>
+            <tr>
+              <td class="label">월별 요금 납부 내역을 확인하고 싶어요</td>
+              <td>air App → 전체 → 월별 요금 및 이용내역 (최근 3개월 청구금액 제공)</td>
+            </tr>
+            <tr>
+              <td class="label">해지는 어떻게 신청하나요?</td>
+              <td>air App 또는 고객센터를 통해 신청. 상세 안내 제공.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 7-4 eSIM -->
+      <div class="sub">
+        <div class="sub-title">7-4. eSIM·USIM <span class="badge badge-orange">데이터 미확정</span></div>
+        <table>
+          <thead><tr><th>질문</th><th>답변</th></tr></thead>
+          <tbody>
+            <tr><td class="label">eSIM 개통은 어떻게 하나요?</td><td>추후 데이터 삽입 예정</td></tr>
+            <tr><td class="label">USIM 교체 방법을 알려주세요</td><td>추후 데이터 삽입 예정</td></tr>
+            <tr><td class="label">eSIM과 USIM 차이가 무엇인가요?</td><td>추후 데이터 삽입 예정</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════ 8. 데이터 구조 ══════ -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">8</div>
+        <div class="section-title">데이터 구조 (catData)</div>
+      </div>
+
+      <p class="desc">현재 JavaScript <code>catData</code> 객체로 관리. 추후 API 연동 시 동일 구조 유지 권장.</p>
+
+      <table>
+        <thead><tr><th>필드</th><th>타입</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td class="label">catData[카테고리].desc</td><td>String (HTML)</td><td>2 Depth 봇 안내 문구</td></tr>
+          <tr><td class="label">catData[카테고리].opts</td><td>Array&lt;Object&gt;</td><td>질문·답변 배열</td></tr>
+          <tr><td class="label">opts[n].q</td><td>String</td><td>2 Depth 버튼 텍스트 / 3 Depth 질문 제목</td></tr>
+          <tr><td class="label">opts[n].a</td><td>Array&lt;String&gt;</td><td>3 Depth 답변 줄(배열 요소 = bullet 1행)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ══════ 9. 미구현/미확정 ══════ -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">9</div>
+        <div class="section-title">미구현 / 추후 검토 항목</div>
+      </div>
+      <table>
+        <thead><tr><th>항목</th><th>현재 상태</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr><td class="label">eSIM·USIM 답변 데이터</td><td><span class="badge badge-orange">미확정</span></td><td>데이터 확정 후 삽입 필요</td></tr>
+          <tr><td class="label">텍스트 입력 챗 기능</td><td><span class="badge badge-gray">UI만 존재</span></td><td>시나리오 챗봇으로 자유 입력 미지원</td></tr>
+          <tr><td class="label">더보기 콘텐츠 확장</td><td><span class="badge badge-gray">토글 UI만</span></td><td>접힌 추가 내용 별도 정의 필요</td></tr>
+          <tr><td class="label">닫기(✕) 동작</td><td><span class="badge badge-gray">UI만 존재</span></td><td>창 닫기 이벤트 연결 필요</td></tr>
+          <tr><td class="label">회선 개통 문의 카드</td><td><span class="badge badge-orange">제거됨</span></td><td>air 회원 가입으로 대체. 재추가 시 데이터 필요</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /body -->
+</div><!-- /doc -->
+</body>
+</html>
