@@ -344,6 +344,13 @@
       box-shadow: 0 1px 5px rgba(0,0,0,.08);
       margin-bottom: 10px;
     }
+    .detail-q {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
     .detail-list {
       list-style: none;
       font-size: 13px;
@@ -493,22 +500,22 @@
               <div class="c-card-title">자주 묻는 질문</div>
               <div class="c-card-desc">자주 묻는 질문을 아래서 확인하세요</div>
               <div class="c-card-btns">
-                <button class="c-item-btn" onclick="go2('회선 개통 문의','회선 개통')">회선 개통 문의</button>
-                <button class="c-item-btn" onclick="go2('포인트 적립·사용','포인트')">포인트 적립·사용</button>
-                <button class="c-item-btn" onclick="go2('요금 납부·해지','요금')">요금 납부·해지</button>
-                <button class="c-item-btn" onclick="go2('eSIM·USIM','eSIM')">eSIM · USIM</button>
+                <button class="c-item-btn" onclick="go2('air 회원 가입')">air 회원 가입</button>
+                <button class="c-item-btn" onclick="go2('포인트 적립·사용')">포인트 적립·사용</button>
+                <button class="c-item-btn" onclick="go2('요금 납부·해지')">요금 납부·해지</button>
+                <button class="c-item-btn" onclick="go2('eSIM·USIM')">eSIM · USIM</button>
               </div>
             </div>
 
-            <!-- 카드 1 : 회선 개통 -->
+            <!-- 카드 1 : air 회원 가입 -->
             <div class="c-card">
               <div class="c-card-av"></div>
-              <div class="c-card-title">회선 개통 문의</div>
-              <div class="c-card-desc">air 회선 개통에 대해서 궁금하신가요?<br>아래 버튼을 누르면 많이 묻는 질문 유형에 대해서 확인할 수 있습니다.</div>
+              <div class="c-card-title">air 회원 가입</div>
+              <div class="c-card-desc">air 회원 가입에 대해서 궁금하신가요?<br>아래 버튼을 누르면 많이 묻는 질문 유형에 대해서 확인할 수 있습니다.</div>
               <div class="c-card-btns">
-                <button class="c-item-btn" onclick="go2('회선 개통 문의','유형 1')">회선 개통 유형 1</button>
-                <button class="c-item-btn" onclick="go2('회선 개통 문의','유형 2')">회선 개통 유형 2</button>
-                <button class="c-item-btn" onclick="go2('회선 개통 문의','유형 3')">회선 개통 유형 3</button>
+                <button class="c-item-btn" onclick="go2('air 회원 가입', 0)">air 가입 조건이 어떻게 되나요?</button>
+                <button class="c-item-btn" onclick="go2('air 회원 가입', 1)">T에서 air로 전환하면 기존 혜택은?</button>
+                <button class="c-item-btn" onclick="go2('air 회원 가입', 2)">회원가입 시 친구초대 혜택 알려주세요</button>
               </div>
             </div>
 
@@ -518,9 +525,9 @@
               <div class="c-card-title">포인트 적립·사용</div>
               <div class="c-card-desc">air 포인트 적립 및 사용에 대해서 궁금하신가요?<br>아래 버튼을 누르면 많이 묻는 질문 유형에 대해 확인할 수 있어요</div>
               <div class="c-card-btns">
-                <button class="c-item-btn" onclick="go2('포인트 적립·사용','적립사용 1')">포인트 적립사용 1</button>
-                <button class="c-item-btn" onclick="go2('포인트 적립·사용','적립사용 2')">포인트 적립사용 2</button>
-                <button class="c-item-btn" onclick="go2('포인트 적립·사용','적립사용 3')">포인트 적립사용 3</button>
+                <button class="c-item-btn" onclick="go2('포인트 적립·사용', 0)">포인트로 요금을 할인받을 수 있나요?</button>
+                <button class="c-item-btn" onclick="go2('포인트 적립·사용', 1)">포인트 적립과 사용 방법을 알려주세요</button>
+                <button class="c-item-btn" onclick="go2('포인트 적립·사용', 2)">포인트샵에서 어떤 상품으로 교환할 수 있나요?</button>
               </div>
             </div>
 
@@ -530,9 +537,9 @@
               <div class="c-card-title">요금 납부·해지</div>
               <div class="c-card-desc">air 요금 납부 및 해지에 대해서 궁금하신가요?<br>아래 버튼을 누르면 많이 묻는 질문 유형에 대해 확인할 수 있어요</div>
               <div class="c-card-btns">
-                <button class="c-item-btn" onclick="go2('요금 납부·해지','유형 1')">요금 납부 유형 1</button>
-                <button class="c-item-btn" onclick="go2('요금 납부·해지','유형 2')">요금 납부 유형 2</button>
-                <button class="c-item-btn" onclick="go2('요금 납부·해지','유형 3')">요금 납부 유형 3</button>
+                <button class="c-item-btn" onclick="go2('요금 납부·해지', 0)">요금 자동납부 방법을 변경하고 싶어요</button>
+                <button class="c-item-btn" onclick="go2('요금 납부·해지', 1)">월별 요금 납부 내역을 확인하고 싶어요</button>
+                <button class="c-item-btn" onclick="go2('요금 납부·해지', 2)">해지는 어떻게 신청하나요?</button>
               </div>
             </div>
 
@@ -607,13 +614,8 @@
       </div>
 
       <div class="detail-card">
-        <ul class="detail-list" id="detailList">
-          <li>회선 개통에 대해서 브라브브라브라브부자회선 개통에 대해서 브라브라브라브라브부자회선</li>
-          <li>개통에 대해서 브라브라브라브라브부자회선 개통에 대해서 브라브라브라브라브부자</li>
-          <li>개통에 대해서 브라브라브라브라브부자회선 개통에 대해서 브라브라브라브라브부자</li>
-          <li>라라라라라라</li>
-          <li>라라라라라이로이로아리</li>
-        </ul>
+        <p class="detail-q" id="detailQ"></p>
+        <ul class="detail-list" id="detailList"></ul>
         <button class="more-toggle" onclick="toggleMore(this)">
           더보기 <span>∨</span>
         </button>
@@ -668,57 +670,108 @@
     }
   }
 
-  /* ── depth 데이터 맵 ── */
+  /* ── FAQ 데이터 (Q&A) ── */
   const catData = {
-    '회선 개통 문의': {
-      desc: 'air 회선 개통에 대해서 궁금하신가요?<br>아래 버튼을 누르면 많이 묻는 질문 유형에 대해서 확인할 수 있습니다.',
-      opts: ['회선 개통 유형 1','회선 개통 유형 2','회선 개통 유형 3']
+    'air 회원 가입': {
+      desc: 'air 회원 가입에 대해서 궁금하신가요?<br>아래 버튼을 누르면 많이 묻는 질문 유형에 대해서 확인할 수 있습니다.',
+      opts: [
+        {
+          q: 'air 가입 조건이 어떻게 되나요?',
+          a: ['air 서비스는 19세 이상 대한민국 국적의 성인만 가입 가능합니다.',
+              '(19세 미만이거나 외국인은 가입이 어렵습니다.)',
+              '또한, 1인은 하나의 회선만 가입 가능하기에, 여러 개의 air 이동전화 회선을 가입하거나 2nd/멀티쓰기/테더링/쉐어링 서비스는 이용이 어렵습니다.']
+        },
+        {
+          q: 'T에서 air로 전환하면 기존 혜택은 어떻게 되나요?',
+          a: ['SKT에서 air로 전환하면 SKT의 혜택을 받을 수 없습니다.',
+              '① 결합할인, 약정할인을 받을 수 없습니다.',
+              '② air 가입 기간은 가입연수 산정에서 제외됩니다. (기존 가입연수는 보존됩니다.)',
+              '③ T멤버십을 이용할 수 없습니다.',
+              '④ SKT에서 가지고 있던 로밍쿠폰, 데이터쿠폰이 삭제되어 더 이상 이용할 수 없습니다.',
+              '⑤ SKT 고객 장기혜택을 받을 수 없습니다.',
+              '⑥ 로밍 상품 구입 시 혜택들이 제공되지 않습니다.']
+        },
+        {
+          q: '회원가입 시 친구초대 혜택 알려주세요',
+          a: ['air App 신규 가입일 48시간 내에 초대코드를 입력하면 나와 나를 초대한 친구 모두 1,000p가 적립됩니다.',
+              '다만 친구초대는 최대 20명까지 적립을 받을 수 있고, 21명째부터는 초대받은 친구만 포인트를 받고 포인트를 발송할 수 없어요.']
+        }
+      ]
     },
     '포인트 적립·사용': {
       desc: 'air 포인트 적립 및 사용에 대해서 궁금하신가요?<br>아래 버튼을 누르면 많이 묻는 질문 유형에 대해 확인할 수 있어요',
-      opts: ['포인트 적립사용 1','포인트 적립사용 2','포인트 적립사용 3']
+      opts: [
+        {
+          q: '포인트로 요금을 할인받을 수 있나요?',
+          a: ['적립하신 포인트로 요금할인에 사용할 수 있습니다.',
+              '매 월 5,000포인트까지 요금할인에 사용해보세요!']
+        },
+        {
+          q: '포인트 적립과 사용 방법을 알려주세요',
+          a: ['air에서 다양한 혜택 프로그램(맞벌기, 오늘의 픽, 포인트 미션 등)에 참여하여 포인트를 적립할 수 있습니다.',
+              '포인트는 1포인트부터 사용할 수 있으며, 다만 air 요금제에 가입한 고객님에 한해 가능하며, 미가입 시는 포인트 적립만 가능합니다.']
+        },
+        {
+          q: '포인트샵에서 어떤 상품으로 교환할 수 있나요?',
+          a: ['포인트샵에서는 air의 포인트를 상품권, 편의점/백화점 상품권, 식음료 상품권 등 다양한 브랜드의 모바일상품권을 구입할 수 있어요.',
+              '고객분들이 더 다양한 상품권을 구입하실 수 있도록 다양한 브랜드와 모바일상품권들이 지속적으로 추가될 예정이에요.']
+        }
+      ]
     },
     '요금 납부·해지': {
       desc: 'air 요금 납부 및 해지에 대해서 궁금하신가요?<br>아래 버튼을 누르면 많이 묻는 질문 유형에 대해 확인할 수 있어요',
-      opts: ['요금 납부 유형 1','요금 납부 유형 2','요금 납부 유형 3']
+      opts: [
+        {
+          q: '요금 자동납부 방법을 변경하고 싶어요',
+          a: ['air App에서 아래 경로를 통해 바로 변경할 수 있습니다.',
+              '전체 → 멤버십 요금안 → 납부 방법 변경 → 변경하기']
+        },
+        {
+          q: '월별 요금 납부 내역을 확인하고 싶어요',
+          a: ['air App에서 아래 경로를 통해 바로 확인 가능합니다.',
+              '전체 → 월별 요금 및 이용내역',
+              '(최근 3개월 청구금액 제공됩니다)']
+        },
+        {
+          q: '해지는 어떻게 신청하나요?',
+          a: ['해지는 air App 또는 고객센터에서 신청하시면 방법을 상세히 안내드리겠습니다.']
+        }
+      ]
     },
     'eSIM·USIM': {
       desc: 'eSIM 및 USIM에 대해서 궁금하신가요?<br>아래 버튼을 누르면 많이 묻는 질문 유형에 대해 확인할 수 있어요',
-      opts: ['eSIM 유형 1','eSIM 유형 2','USIM 유형 1']
-    },
-    '회선 개통': { desc: '', opts: [] },
-    '포인트': { desc: '', opts: [] },
-    '요금': { desc: '', opts: [] },
-    'eSIM': { desc: '', opts: [] },
+      opts: [
+        { q: 'eSIM 개통은 어떻게 하나요?',       a: ['eSIM 개통 안내 내용입니다.'] },
+        { q: 'USIM 교체 방법을 알려주세요',        a: ['USIM 교체 안내 내용입니다.'] },
+        { q: 'eSIM과 USIM 차이가 무엇인가요?',    a: ['eSIM·USIM 비교 안내 내용입니다.'] }
+      ]
+    }
   };
 
-  let activeCat = '회선 개통 문의';
+  let activeCat = 'air 회원 가입';
+  let activeOptIdx = 0;
 
-  function go2(cat) {
+  function go2(cat, optIdx) {
     activeCat = cat;
-    const d = catData[cat] || catData['회선 개통 문의'];
+    const d = catData[cat];
     document.getElementById('chip2').textContent = cat;
     document.getElementById('bubble2Title').textContent = cat;
     document.getElementById('bubble2Desc').innerHTML = d.desc;
     const btns = document.getElementById('optBtns');
-    btns.innerHTML = d.opts.map(o =>
-      `<button class="opt-btn" onclick="go3('${o}')">${o}</button>`
+    btns.innerHTML = d.opts.map((o, i) =>
+      `<button class="opt-btn" onclick="go3(${i})">${o.q}</button>`
     ).join('');
     showScreen(2, null);
     document.querySelectorAll('.demo-tab').forEach((t,i) => t.classList.toggle('active', i === 1));
+    if (optIdx !== undefined) { go3(optIdx); }
   }
 
-  function go3(subtype) {
+  function go3(idx) {
+    activeOptIdx = idx;
+    const item = catData[activeCat].opts[idx];
     document.getElementById('chip3').textContent = activeCat;
-    // 상세 내용 예시 (실제 데이터로 교체)
-    const items = [
-      activeCat + ' > ' + subtype + ' 에 대한 안내 내용 첫 번째 항목입니다.',
-      '두 번째 안내 항목 : 브라브브라브라브부자회선 개통에 대해서 안내드립니다.',
-      '세 번째 항목 : 개통에 대해서 브라브라브라브라브부자회선 개통에 대해서 브라브라브라브라브부자',
-      '라라라라라라',
-      '라라라라라이로이로아리',
-    ];
-    document.getElementById('detailList').innerHTML = items.map(i => `<li>${i}</li>`).join('');
+    document.getElementById('detailQ').textContent = item.q;
+    document.getElementById('detailList').innerHTML = item.a.map(line => `<li>${line}</li>`).join('');
     showScreen(3, null);
     document.querySelectorAll('.demo-tab').forEach((t,i) => t.classList.toggle('active', i === 2));
   }
