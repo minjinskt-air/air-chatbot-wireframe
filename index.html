@@ -392,6 +392,16 @@
       margin-bottom: 10px;
       line-height: 1.5;
     }
+    .detail-app-link {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #1a6fd4;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .detail-app-link:hover { color: #0f4fa8; }
     .detail-list {
       list-style: none;
       font-size: 13px;
@@ -859,7 +869,9 @@
     const item = catData[activeCat].opts[idx];
     document.getElementById('chip3').textContent = activeCat;
     document.getElementById('detailQ').textContent = item.q;
-    document.getElementById('detailList').innerHTML = item.a.map(line => `<li>${line}</li>`).join('');
+    document.getElementById('detailList').innerHTML =
+      item.a.map(line => `<li>${line}</li>`).join('') +
+      `<li style="list-style:none; padding-top:4px;"><a class="detail-app-link" href="#">해당 App내 화면으로 이동하기</a></li>`;
 
     // 기존 more-toggle 완전 제거
     const existing = document.getElementById('detailCard').querySelector('.more-toggle');
