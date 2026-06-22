@@ -655,13 +655,10 @@
         <span class="cat-chip" id="chip3">회선 개통 문의</span>
       </div>
 
-      <div class="detail-card">
+      <div class="detail-card" id="detailCard">
         <p class="detail-q" id="detailQ"></p>
         <ul class="detail-list" id="detailList"></ul>
-        <button class="more-toggle" onclick="toggleMore(this)">
-          더보기 <span>∨</span>
-        </button>
-        <!-- 채팅상담사 연결하기 — 더보기 아래 카드 내 배치 -->
+        <!-- more-toggle은 100자 이상일 때만 동적 삽입 -->
         <button class="connect-btn" onclick="window.open('https://mw-aicc.sktelecom.com/msgfe/chatWrap?popUp=true&id=AIRWEBCH01','_blank','width=400,height=700')">채팅상담사 연결하기</button>
       </div>
 
@@ -864,16 +861,20 @@
     document.getElementById('detailQ').textContent = item.q;
     document.getElementById('detailList').innerHTML = item.a.map(line => `<li>${line}</li>`).join('');
 
-    // 답변 전체 글자 수 계산 (배열 합산)
+    // 기존 more-toggle 완전 제거
+    const existing = document.getElementById('detailCard').querySelector('.more-toggle');
+    if (existing) existing.remove();
+
+    // 100자 이상일 때만 more-toggle 동적 삽입 (connect-btn 바로 앞)
     const totalLen = item.a.join('').length;
-    const moreBtn = document.querySelector('.more-toggle');
     if (totalLen >= 100) {
-      moreBtn.style.display = '';          // 표시
-      moreBtn.dataset.open = 'false';      // 접힌 상태로 초기화
-      moreBtn.querySelector('span').textContent = '∨';
-      moreBtn.firstChild.textContent = '더보기 ';
-    } else {
-      moreBtn.style.display = 'none';      // 100자 미만이면 숨김
+      const btn = document.createElement('button');
+      btn.className = 'more-toggle';
+      btn.dataset.open = 'false';
+      btn.onclick = function() { toggleMore(this); };
+      btn.innerHTML = '더보기 <span>∨</span>';
+      const connectBtn = document.getElementById('detailCard').querySelector('.connect-btn');
+      connectBtn.before(btn);
     }
 
     showScreen(3, null);
