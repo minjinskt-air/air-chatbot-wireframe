@@ -1,0 +1,44 @@
+# 개인/시스템 파일 제외
+AppData/
+Application Data/
+Contacts/
+Cookies/
+Desktop/
+Documents/
+Downloads/
+Favorites/
+Links/
+Local Settings/
+Music/
+My Documents/
+OneDrive/
+Pictures/
+Recent/
+Saved Games/
+Searches/
+SendTo/
+Videos/
+NTUSER*
+ntuser*
+*.LOG1
+*.LOG2
+*.blf
+*.regtrans-ms
+ntuser.ini
+.gitconfig
+.local/
+.antigravity/
+.gemini/
+.claude/
+.claude.json
+
+# 기타 프로젝트
+air-chatbot/
+aircc_notice/
+autosyncdisk/
+contact-notice-proto/
+corporate_card/
+mtm_stat/
+todo-app/
+chat-ui-design.html
+시작 메뉴/
