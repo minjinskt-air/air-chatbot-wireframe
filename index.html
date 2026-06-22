@@ -863,6 +863,19 @@
     document.getElementById('chip3').textContent = activeCat;
     document.getElementById('detailQ').textContent = item.q;
     document.getElementById('detailList').innerHTML = item.a.map(line => `<li>${line}</li>`).join('');
+
+    // 답변 전체 글자 수 계산 (배열 합산)
+    const totalLen = item.a.join('').length;
+    const moreBtn = document.querySelector('.more-toggle');
+    if (totalLen >= 100) {
+      moreBtn.style.display = '';          // 표시
+      moreBtn.dataset.open = 'false';      // 접힌 상태로 초기화
+      moreBtn.querySelector('span').textContent = '∨';
+      moreBtn.firstChild.textContent = '더보기 ';
+    } else {
+      moreBtn.style.display = 'none';      // 100자 미만이면 숨김
+    }
+
     showScreen(3, null);
     document.querySelectorAll('.demo-tab').forEach((t,i) => t.classList.toggle('active', i === 2));
   }
