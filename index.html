@@ -253,6 +253,19 @@
     .send-btn:hover { background: #b0b6bc; }
 
     .appended { margin-top: 10px; }
+
+    /* ── 상담원 연결 안내 메시지 ── */
+    .agent-msg-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px 16px;
+      font-size: 13px;
+      color: #444;
+      line-height: 2;
+      text-align: center;
+      box-shadow: 0 1px 5px rgba(0,0,0,.08);
+      width: 270px;
+    }
     .user-bubble-row.appended { margin-top: 16px; }
 
     /* ── 카드 하단 nav ── */
@@ -486,7 +499,7 @@
       <div class="detail-card">
         <p class="detail-q">${item.q}</p>
         <ul class="detail-list">${listHtml}</ul>
-        <button class="connect-btn" onclick="window.open('https://mw-aicc.sktelecom.com/msgfe/chatWrap?popUp=true&id=AIRWEBCH01','_blank','width=400,height=700')">채팅상담사 연결하기</button>
+        <button class="connect-btn" onclick="connectAgent(this)">채팅상담사 연결하기</button>
       </div>
       <div class="card-nav">
         <button class="card-nav-btn" onclick="navBack('${activeCat}')">이전으로</button>
@@ -672,6 +685,25 @@
       <div class="card-nav">
         <button class="card-nav-btn" onclick="navBack(null)">이전으로</button>
         <button class="card-nav-btn" onclick="navHome()">처음으로</button>
+      </div>`;
+    chatBody.appendChild(card);
+    scrollBottom();
+  }
+
+  /* ── 상담원 연결 안내 메시지 append ── */
+  function connectAgent(btn) {
+    btn.disabled = true;
+    const chatBody = document.getElementById('chatBody');
+    const card = document.createElement('div');
+    card.className = 'appended';
+    card.innerHTML = `
+      <div class="agent-msg-card">
+        안녕하세요.<br>
+        상담사를 연결해 드리겠습니다.<br>
+        산업안전보건법에 따라 고객 응대 근로자 보호 조치가<br>
+        시행되고 있습니다.<br><br>
+        고객님의 따뜻한 배려에 감사드리며,<br>
+        최선을 다해 안내해 드리겠습니다.
       </div>`;
     chatBody.appendChild(card);
     scrollBottom();
