@@ -489,8 +489,8 @@
         <button class="connect-btn" onclick="window.open('https://mw-aicc.sktelecom.com/msgfe/chatWrap?popUp=true&id=AIRWEBCH01','_blank','width=400,height=700')">채팅상담사 연결하기</button>
       </div>
       <div class="card-nav">
-        <button class="card-nav-btn" onclick="appendDepth2('${activeCat}')">이전으로</button>
-        <button class="card-nav-btn" onclick="appendStart()">처음으로</button>
+        <button class="card-nav-btn" onclick="navBack('${activeCat}')">이전으로</button>
+        <button class="card-nav-btn" onclick="navHome()">처음으로</button>
       </div>`;
 
     if (item.a.join('').length >= 250) {
@@ -529,8 +529,8 @@
         <div class="opt-btns">${optHtml}</div>
       </div>
       <div class="card-nav">
-        <button class="card-nav-btn" onclick="appendStart()">이전으로</button>
-        <button class="card-nav-btn" onclick="appendStart()">처음으로</button>
+        <button class="card-nav-btn" onclick="navBack(null)">이전으로</button>
+        <button class="card-nav-btn" onclick="navHome()">처음으로</button>
       </div>`;
     chatBody.appendChild(card);
     scrollBottom();
@@ -561,6 +561,17 @@
     appendUserBubble(item.q);
     appendDetailCard(item);
     scrollBottom();
+  }
+
+  /* nav 버튼 래퍼 — 말풍선 먼저 출력 후 동작 */
+  function navBack(cat) {
+    appendUserBubble('이전으로');
+    if (cat) appendDepth2(cat);
+    else appendStart();
+  }
+  function navHome() {
+    appendUserBubble('처음으로');
+    appendStart();
   }
 
   /* 처음으로 — 1DEPTH 카드를 새로 append */
@@ -606,8 +617,8 @@
         <div class="opt-btns">${optHtml}</div>
       </div>
       <div class="card-nav">
-        <button class="card-nav-btn" onclick="appendStart()">이전으로</button>
-        <button class="card-nav-btn" onclick="appendStart()">처음으로</button>
+        <button class="card-nav-btn" onclick="navBack(null)">이전으로</button>
+        <button class="card-nav-btn" onclick="navHome()">처음으로</button>
       </div>`;
     chatBody.appendChild(card);
     scrollBottom();
