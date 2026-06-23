@@ -254,6 +254,15 @@
 
     .appended { margin-top: 10px; }
     .user-bubble-row.appended { margin-top: 16px; }
+
+    /* ── 카드 하단 nav ── */
+    .card-nav { display: flex; gap: 8px; margin-top: 8px; }
+    .card-nav-btn {
+      flex: 1; padding: 10px; border: 1px solid #ccc;
+      border-radius: 22px; background: #fff; font-size: 13px;
+      color: #555; cursor: pointer; text-align: center; transition: background .15s;
+    }
+    .card-nav-btn:hover { background: #f0f0f0; }
   </style>
 </head>
 <body>
@@ -478,6 +487,10 @@
         <p class="detail-q">${item.q}</p>
         <ul class="detail-list">${listHtml}</ul>
         <button class="connect-btn" onclick="window.open('https://mw-aicc.sktelecom.com/msgfe/chatWrap?popUp=true&id=AIRWEBCH01','_blank','width=400,height=700')">채팅상담사 연결하기</button>
+      </div>
+      <div class="card-nav">
+        <button class="card-nav-btn" onclick="goBack()">이전으로</button>
+        <button class="card-nav-btn" onclick="restartChat()">처음으로</button>
       </div>`;
 
     if (item.a.join('').length >= 250) {
@@ -514,6 +527,10 @@
         </div>
         <div class="depth-card-desc">${d.desc}</div>
         <div class="opt-btns">${optHtml}</div>
+      </div>
+      <div class="card-nav">
+        <button class="card-nav-btn" onclick="restartChat()">이전으로</button>
+        <button class="card-nav-btn" onclick="restartChat()">처음으로</button>
       </div>`;
     chatBody.appendChild(card);
     scrollBottom();
@@ -543,6 +560,22 @@
     const item = catData[cat].opts[idx];
     appendUserBubble(item.q);
     appendDetailCard(item);
+    scrollBottom();
+  }
+
+  /* 이전으로 — 3DEPTH 제거 후 2DEPTH opt-btn 재활성화 */
+  function goBack() {
+    const appended = [...document.querySelectorAll('.appended')];
+    let depthIdx = -1;
+    for (let i = appended.length - 1; i >= 0; i--) {
+      if (appended[i].querySelector('.depth-card')) { depthIdx = i; break; }
+    }
+    if (depthIdx === -1) { restartChat(); return; }
+    appended.slice(depthIdx + 1).forEach(el => el.remove());
+    appended[depthIdx].querySelectorAll('.opt-btn').forEach(b => {
+      b.disabled = false;
+      b.classList.remove('btn-selected');
+    });
     scrollBottom();
   }
 
