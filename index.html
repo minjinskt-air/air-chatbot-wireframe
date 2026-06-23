@@ -15,10 +15,10 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding: 90px 20px 40px;
+      padding: 70px 20px 40px;
     }
 
-    /* ────────────── 데모 컨트롤 ────────────── */
+    /* ── 데모 컨트롤 ── */
     .demo-bar {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -31,13 +31,7 @@
       z-index: 999;
       box-shadow: 0 2px 6px rgba(0,0,0,.1);
     }
-    .demo-bar-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: #333;
-      margin-right: 10px;
-      white-space: nowrap;
-    }
+    .demo-bar-title { font-size: 13px; font-weight: 700; color: #333; margin-right: 10px; white-space: nowrap; }
     .demo-tab {
       padding: 7px 16px;
       border: 1px solid #ccc;
@@ -47,20 +41,11 @@
       background: #fff;
       color: #555;
       transition: all .2s;
-      white-space: nowrap;
     }
-    .demo-tab.active {
-      background: #333;
-      color: #fff;
-      border-color: #333;
-    }
-    .demo-hint {
-      font-size: 11px;
-      color: #999;
-      margin-left: 8px;
-    }
+    .demo-tab:hover { background: #f5f5f5; }
+    .demo-hint { font-size: 11px; color: #999; margin-left: 8px; }
 
-    /* ────────────── 챗봇 창 ────────────── */
+    /* ── 챗봇 창 ── */
     .chat-window {
       width: 360px;
       height: 660px;
@@ -70,7 +55,6 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      position: relative;
     }
 
     /* ── 헤더 ── */
@@ -82,456 +66,207 @@
       border-bottom: 1px solid #e5e5e5;
       flex-shrink: 0;
     }
-    .hd-avatar {
-      width: 42px; height: 42px;
-      border-radius: 50%;
-      background: #b0b8c1;
-      flex-shrink: 0;
-      margin-right: 10px;
-      object-fit: cover;
-    }
+    .hd-avatar { width: 42px; height: 42px; border-radius: 50%; background: #b0b8c1; flex-shrink: 0; margin-right: 10px; }
     .hd-text { flex: 1; }
     .hd-name { font-size: 14px; font-weight: 700; color: #1a1a1a; }
-    .hd-status {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 11px;
-      color: #888;
-      margin-top: 2px;
-    }
-    .status-dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: #b0b8c1;
-    }
+    .hd-status { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #888; margin-top: 2px; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #b0b8c1; }
     .hd-end {
-      font-size: 12px;
-      color: #666;
-      cursor: pointer;
-      padding: 5px 10px;
-      border: 1px solid #ccc;
-      border-radius: 14px;
-      background: #fff;
-      margin-right: 6px;
-      white-space: nowrap;
-      transition: background .15s, color .15s;
+      font-size: 12px; color: #666; cursor: pointer;
+      padding: 5px 10px; border: 1px solid #ccc; border-radius: 14px;
+      background: #fff; margin-right: 6px; white-space: nowrap; transition: background .15s;
     }
-    .hd-end:hover { background: #f5f5f5; color: #333; }
-    .hd-close {
-      font-size: 18px;
-      color: #888;
-      cursor: pointer;
-      padding: 6px;
-      border: none;
-      background: none;
-      line-height: 1;
-    }
+    .hd-end:hover { background: #f5f5f5; }
+    .hd-close { font-size: 18px; color: #888; cursor: pointer; padding: 6px; border: none; background: none; line-height: 1; }
 
-    /* ── 상담 종료 — 채팅 바디 하단 append ── */
-    .end-append {
-      margin-top: 20px;
-      text-align: center;
-    }
-    .end-msg-box {
-      background: #ebebeb;
-      border-radius: 10px;
-      padding: 18px 20px;
-      font-size: 13px;
-      color: #555;
-      line-height: 1.8;
-      margin-bottom: 18px;
-      text-align: center;
-    }
-    .end-restart-btn {
-      padding: 13px 36px;
-      border: 1.5px solid #aaa;
-      border-radius: 8px;
-      background: #fff;
-      font-size: 14px;
-      font-weight: 700;
-      color: #333;
-      cursor: pointer;
-      transition: background .15s;
-    }
-    .end-restart-btn:hover { background: #f0f0f0; }
-
-    /* ── 스크린 전환 ── */
-    .screen { display: none; flex-direction: column; flex: 1; overflow: hidden; }
-    .screen.active { display: flex; }
-
-    /* ── 스크롤 영역 ── */
+    /* ── 스크롤 채팅 본문 ── */
     .chat-body {
       flex: 1;
       overflow-y: auto;
-      padding: 16px 14px;
+      padding: 16px 14px 20px;
       background: #f6f6f6;
     }
     .chat-body::-webkit-scrollbar { width: 4px; }
     .chat-body::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
 
-    /* ── 카테고리 칩 (depth 표시) ── */
-    .cat-chip-row { text-align: right; margin-bottom: 14px; }
-    .cat-chip {
-      display: inline-block;
-      background: #e5e5e5;
-      color: #555;
+    /* ── 날짜 구분선 ── */
+    .chat-date {
+      text-align: center;
       font-size: 12px;
-      padding: 5px 16px;
-      border-radius: 20px;
+      color: #aaa;
+      margin: 4px 0 14px;
     }
 
-    /* ── 봇 말풍선 ── */
-    .bot-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 9px;
-      margin-bottom: 14px;
-    }
-    .bot-av {
-      width: 34px; height: 34px;
-      border-radius: 50%;
-      background: #b0b8c1;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-    .bot-bubble {
-      background: #fff;
-      border-radius: 2px 12px 12px 12px;
-      padding: 12px 14px;
+    /* ── 유저 말풍선 ── */
+    .user-bubble-row { display: flex; justify-content: flex-end; margin: 10px 0 6px; }
+    .user-bubble {
+      background: #00b4ce;
+      color: #fff;
+      border-radius: 12px 12px 2px 12px;
+      padding: 10px 14px;
       font-size: 13px;
-      color: #444;
-      line-height: 1.55;
-      box-shadow: 0 1px 4px rgba(0,0,0,.08);
-      max-width: 250px;
-    }
-    .bot-bubble .b-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: #222;
-      display: block;
-      margin-bottom: 7px;
+      max-width: 220px;
+      line-height: 1.5;
+      word-break: keep-all;
     }
 
-    /* ══════════════ 1 DEPTH ══════════════ */
+    /* ── 버튼 선택 상태 ── */
+    .c-item-btn.btn-selected { background: #e6f7fa !important; border-color: #00b4ce !important; color: #007a8c !important; }
+    .opt-btn.btn-selected    { background: #e6f7fa !important; border-color: #00b4ce !important; color: #007a8c !important; }
+    .c-item-btn:disabled, .opt-btn:disabled { opacity: 0.45; cursor: default; pointer-events: none; }
 
-    /* 캐러셀 래퍼 — chat-body 패딩 밖으로 확장해서 edge-to-edge */
+    /* ══════ 1DEPTH 캐러셀 ══════ */
     .carousel-outer {
       position: relative;
-      margin: 0 -14px;          /* chat-body의 14px 패딩 상쇄 */
-      overflow: hidden;         /* 카드가 창 밖으로 넘치지 않도록 클리핑 */
-      padding: 6px 0;           /* 카드 그림자 잘림 방지 */
+      margin: 0 -14px;
+      overflow: hidden;
+      padding: 6px 0;
     }
-    .carousel-viewport {
-      overflow: visible;
-    }
+    .carousel-viewport { overflow: visible; }
     .carousel-track {
       display: flex;
       gap: 10px;
-      padding-left: 14px;       /* 첫 카드 좌측 여백 */
+      padding-left: 14px;
       transition: transform .32s cubic-bezier(.4,0,.2,1);
     }
-
-    /* 캐러셀 카드 — 고정 폭으로 우측 peek 확보 */
     .c-card {
-      width: 270px;             /* 360 - 14(좌패딩) - 270 - 10(gap) = 66px 우측 peek */
+      width: 270px;
       flex-shrink: 0;
       background: #fff;
       border-radius: 10px;
       padding: 14px 13px;
       box-shadow: 0 1px 6px rgba(0,0,0,.10);
     }
-    .c-card-av {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      background: #c8cdd3;
-      margin-bottom: 8px;
-      object-fit: cover;
-    }
-    .c-card-sup { font-size: 11px; color: #999; margin-bottom: 1px; }
+    .c-card-av { width: 36px; height: 36px; border-radius: 50%; background: #c8cdd3; margin-bottom: 8px; }
     .c-card-title { font-size: 14px; font-weight: 700; color: #222; margin-bottom: 7px; }
     .c-card-desc { font-size: 11px; color: #777; line-height: 1.5; margin-bottom: 10px; }
     .c-card-btns { display: flex; flex-direction: column; gap: 6px; }
     .c-item-btn {
-      border: 1px solid #ddd;
-      border-radius: 7px;
-      padding: 9px 10px;
-      font-size: 12px;
-      color: #444;
-      background: #fff;
-      text-align: left;
-      cursor: pointer;
-      transition: background .15s, border-color .15s;
+      border: 1px solid #ddd; border-radius: 7px; padding: 9px 10px;
+      font-size: 12px; color: #444; background: #fff;
+      text-align: left; cursor: pointer; transition: background .15s, border-color .15s;
     }
-    .c-item-btn:hover { background: #f3f3f3; border-color: #bbb; }
+    .c-item-btn:hover:not(:disabled) { background: #f3f3f3; border-color: #bbb; }
 
-    /* 캐러셀 화살표 — 좌우 엣지 오버레이 */
+    /* 캐러셀 화살표 */
     .c-arrow {
-      position: absolute;
-      top: 50%; transform: translateY(-50%);
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      background: rgba(255,255,255,.92);
-      border: 1px solid #ddd;
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(255,255,255,.92); border: 1px solid #ddd;
       box-shadow: 0 2px 6px rgba(0,0,0,.15);
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px; color: #444;
-      z-index: 10;
-      transition: background .15s;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 16px; color: #444; z-index: 10; transition: background .15s;
     }
     .c-arrow:hover { background: #f0f0f0; }
     .c-arrow.left  { left: 6px; }
     .c-arrow.right { right: 6px; }
     .c-arrow.hidden { display: none; }
-
-    /* 우측 페이드 — 더 많은 카드가 있음을 암시 */
     .carousel-outer::after {
-      content: '';
-      position: absolute;
-      right: 0; top: 0; bottom: 0;
-      width: 48px;
+      content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 48px;
       background: linear-gradient(to right, transparent, rgba(246,246,246,.75));
-      pointer-events: none;
-      z-index: 4;
+      pointer-events: none; z-index: 4;
     }
-
-    /* 페이지 인디케이터 */
-    .carousel-dots {
-      display: flex;
-      justify-content: center;
-      gap: 6px;
-      margin-top: 10px;
-    }
-    .dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: #ccc;
-      transition: background .2s;
-    }
+    .carousel-dots { display: flex; justify-content: center; gap: 6px; margin-top: 10px; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: #ccc; transition: background .2s; }
     .dot.active { background: #555; }
 
-    /* ══════════════ 2 DEPTH ══════════════ */
-
-    /* 통합 카드 — 봇 설명 + 선택지 전체를 감싸는 회색 카드 */
+    /* ══════ 2DEPTH 카드 ══════ */
     .depth-card {
-      background: #e8e8e8;
-      border-radius: 14px;
-      padding: 16px 14px 14px;
-      margin-bottom: 12px;
+      background: #e8e8e8; border-radius: 14px;
+      padding: 16px 14px 14px; margin-bottom: 4px;
     }
-    .depth-card-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-    .depth-card-av {
-      width: 38px; height: 38px;
-      border-radius: 50%;
-      background: #fff;
-      flex-shrink: 0;
-    }
-    .depth-card-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: #1a1a1a;
-    }
-    .depth-card-desc {
-      font-size: 12px;
-      color: #555;
-      line-height: 1.6;
-      margin-bottom: 12px;
-    }
-
+    .depth-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .depth-card-av { width: 38px; height: 38px; border-radius: 50%; background: #fff; flex-shrink: 0; }
+    .depth-card-title { font-size: 15px; font-weight: 700; color: #1a1a1a; }
+    .depth-card-desc { font-size: 12px; color: #555; line-height: 1.6; margin-bottom: 12px; }
     .opt-btns { display: flex; flex-direction: column; gap: 7px; }
     .opt-btn {
-      border: 1px solid #d5d5d5;
-      border-radius: 9px;
-      padding: 13px 14px;
-      font-size: 13px;
-      color: #333;
-      background: #fff;
-      text-align: left;
-      cursor: pointer;
-      transition: background .15s, border-color .15s;
+      border: 1px solid #d5d5d5; border-radius: 9px; padding: 13px 14px;
+      font-size: 13px; color: #333; background: #fff;
+      text-align: left; cursor: pointer; transition: background .15s, border-color .15s;
     }
-    .opt-btn:hover { background: #f5f5f5; border-color: #bbb; }
+    .opt-btn:hover:not(:disabled) { background: #f5f5f5; border-color: #bbb; }
 
-    /* 카드 하단 캡션형 네비게이션 */
-    .card-nav {
-      display: flex;
-      gap: 8px;
-    }
-    .card-nav-btn {
-      flex: 1;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 22px;
-      background: #fff;
-      font-size: 13px;
-      color: #555;
-      cursor: pointer;
-      text-align: center;
-      transition: background .15s;
-    }
-    .card-nav-btn:hover { background: #f0f0f0; }
-
-    /* ══════════════ 3 DEPTH ══════════════ */
+    /* ══════ 3DEPTH 카드 ══════ */
     .detail-card {
-      background: #fff;
-      border-radius: 10px;
-      padding: 14px 15px;
-      box-shadow: 0 1px 5px rgba(0,0,0,.08);
-      margin-bottom: 10px;
+      background: #fff; border-radius: 10px;
+      padding: 14px 15px; box-shadow: 0 1px 5px rgba(0,0,0,.08); margin-bottom: 4px;
     }
-    .detail-q {
-      font-size: 13px;
-      font-weight: 700;
-      color: #1a1a1a;
-      margin-bottom: 10px;
-      line-height: 1.5;
-    }
-    .detail-app-link {
-      display: inline-block;
-      margin-top: 12px;
-      font-size: 13px;
-      font-weight: 700;
-      color: #1a6fd4;
-      text-decoration: underline;
-      cursor: pointer;
-    }
-    .detail-app-link:hover { color: #0f4fa8; }
-    .detail-list {
-      list-style: none;
-      font-size: 13px;
-      color: #444;
-      line-height: 1.75;
-    }
+    .detail-q { font-size: 13px; font-weight: 700; color: #1a1a1a; margin-bottom: 10px; line-height: 1.5; }
+    .detail-list { list-style: none; font-size: 13px; color: #444; line-height: 1.75; }
     .detail-list li { padding: 1px 0; }
     .detail-list li::before { content: "· "; color: #888; }
+    .detail-app-link {
+      display: inline-block; margin-top: 12px;
+      font-size: 13px; font-weight: 700; color: #1a6fd4;
+      text-decoration: underline; cursor: pointer;
+    }
+    .detail-app-link:hover { color: #0f4fa8; }
     .more-toggle {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-      padding: 9px 0 2px;
-      margin-top: 8px;
-      border: none;
-      border-top: 1px solid #eee;
-      background: none;
-      font-size: 13px;
-      color: #666;
-      cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+      width: 100%; padding: 9px 0 2px; margin-top: 8px;
+      border: none; border-top: 1px solid #eee;
+      background: none; font-size: 13px; color: #666; cursor: pointer;
     }
     .more-toggle span { font-size: 11px; }
     .connect-btn {
-      width: 100%;
-      padding: 13px;
-      background: #d8d8d8;
-      border: none;
-      border-top: 1px solid #ccc;
-      border-radius: 0 0 9px 9px;
-      font-size: 13px;
-      color: #333;
-      cursor: pointer;
-      text-align: center;
-      transition: background .15s;
-      margin-top: 10px;
+      width: 100%; padding: 13px; background: #d8d8d8;
+      border: none; border-top: 1px solid #ccc; border-radius: 0 0 9px 9px;
+      font-size: 13px; color: #333; cursor: pointer;
+      text-align: center; transition: background .15s; margin-top: 10px;
     }
     .connect-btn:hover { background: #ccc; }
 
-    /* ── 하단 네비게이션 ── */
-    .chat-nav {
-      display: flex;
-      gap: 8px;
-      padding: 10px 14px;
-      background: #f6f6f6;
-      border-top: 1px solid #ebebeb;
-      flex-shrink: 0;
+    /* ── 상담 종료 ── */
+    .end-append { margin-top: 20px; text-align: center; }
+    .end-msg-box {
+      background: #ebebeb; border-radius: 10px;
+      padding: 18px 20px; font-size: 13px; color: #555;
+      line-height: 1.8; margin-bottom: 18px; text-align: center;
     }
-    .nav-btn {
-      flex: 1;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 22px;
-      background: #fff;
-      font-size: 13px;
-      color: #555;
-      cursor: pointer;
-      transition: background .15s;
+    .end-restart-btn {
+      padding: 13px 36px; border: 1.5px solid #aaa; border-radius: 8px;
+      background: #fff; font-size: 14px; font-weight: 700; color: #333;
+      cursor: pointer; transition: background .15s;
     }
-    .nav-btn:hover { background: #f0f0f0; }
+    .end-restart-btn:hover { background: #f0f0f0; }
 
     /* ── 입력창 ── */
     .input-bar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 12px;
-      background: #fff;
-      border-top: 1px solid #e5e5e5;
-      flex-shrink: 0;
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 12px; background: #fff;
+      border-top: 1px solid #e5e5e5; flex-shrink: 0;
     }
     .input-plus { font-size: 22px; color: #aaa; cursor: pointer; line-height: 1; }
     .text-input {
-      flex: 1;
-      border: 1px solid #ddd;
-      border-radius: 22px;
-      padding: 8px 14px;
-      font-size: 13px;
-      background: #f9f9f9;
-      outline: none;
-      color: #333;
+      flex: 1; border: 1px solid #ddd; border-radius: 22px;
+      padding: 8px 14px; font-size: 13px; background: #f9f9f9;
+      outline: none; color: #333;
     }
     .send-btn {
-      width: 36px; height: 36px;
-      background: #c8cdd3;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      flex-shrink: 0;
-      transition: background .15s;
+      width: 36px; height: 36px; background: #c8cdd3;
+      border: none; border-radius: 8px; cursor: pointer;
+      flex-shrink: 0; transition: background .15s;
     }
     .send-btn:hover { background: #b0b6bc; }
 
-    /* ── 주석 라벨 (와이어프레임 어노테이션) ── */
-    .chat-date {
-      text-align: center;
-      font-size: 12px;
-      color: #aaa;
-      margin: 8px 0 12px;
-    }
-    .anno {
-      display: block;
-      font-size: 10px;
-      font-weight: 700;
-      color: #fff;
-      background: #e8a020;
-      padding: 2px 7px;
-      border-radius: 3px;
-      margin-bottom: 6px;
-      width: fit-content;
-    }
+    .appended { margin-top: 8px; }
   </style>
 </head>
 <body>
 
-<!-- ────────── 데모 컨트롤바 ────────── -->
+<!-- 데모 컨트롤바 -->
 <div class="demo-bar">
   <span class="demo-bar-title">air 채팅 상담 · 화면설계 와이어프레임</span>
-  <button class="demo-tab active" onclick="showScreen(1,this)">1Depth&nbsp;대주제 선택</button>
-  <button class="demo-tab" onclick="showScreen(2,this)">2Depth&nbsp;세부주제 선택</button>
-  <button class="demo-tab" onclick="showScreen(3,this)">3Depth&nbsp;상세 정보</button>
-  <span class="demo-hint">※ 카드·버튼 클릭 시 다음 depth로 이동</span>
+  <button class="demo-tab" onclick="restartChat()">처음으로</button>
+  <span class="demo-hint">※ 카드·버튼 클릭 시 대화가 이어집니다</span>
 </div>
 
-<!-- ────────── 챗봇 창 ────────── -->
+<!-- 챗봇 창 -->
 <div class="chat-window">
 
-  <!-- 공통 헤더 -->
   <div class="chat-header">
-    <img class="hd-avatar" src="chatbot@3x.png" alt="상담 프로필">
+    <div class="hd-avatar"></div>
     <div class="hd-text">
       <div class="hd-name">air 채팅 상담</div>
       <div class="hd-status"><div class="status-dot"></div>Online</div>
@@ -540,219 +275,99 @@
     <button class="hd-close">✕</button>
   </div>
 
-  <!-- ══════════ SCREEN 1 : 1DEPTH ══════════ -->
-  <div class="screen active" id="s1">
-    <div class="chat-body">
-      <div class="chat-date" id="chatDate"></div>
-      <div class="carousel-outer">
-        <button class="c-arrow left hidden" id="arrowL" onclick="slide(-1)">‹</button>
+  <div class="chat-body" id="chatBody">
+    <div class="chat-date" id="chatDate"></div>
 
-        <div class="carousel-viewport">
-          <div class="carousel-track" id="cTrack">
+    <!-- 1DEPTH 캐러셀 -->
+    <div class="carousel-outer">
+      <button class="c-arrow left hidden" id="arrowL" onclick="slide(-1)">‹</button>
+      <div class="carousel-viewport">
+        <div class="carousel-track" id="cTrack">
 
-            <!-- 카드 0 : FAQ -->
-            <div class="c-card">
-              <div class="c-card-av"></div>
-              <div class="c-card-title" style="margin-bottom:3px">air 고객센터</div>
-              <div class="c-card-title">무엇을 도와드릴까요?</div>
-              <div class="c-card-desc">아래 주제를 선택하면 바로 안내해 드려요</div>
-              <div class="c-card-btns">
-                <button class="c-item-btn" onclick="go2('air 회원 가입')">air 회원 가입</button>
-                <button class="c-item-btn" onclick="go2('포인트 적립·사용')">포인트 적립·사용</button>
-                <button class="c-item-btn" onclick="go2('요금 납부·해지')">요금 납부·해지</button>
-                <button class="c-item-btn" onclick="go2('eSIM·USIM')">eSIM · USIM</button>
-              </div>
+          <!-- 카드 0 : 대주제 선택 -->
+          <div class="c-card">
+            <div class="c-card-av"></div>
+            <div class="c-card-title" style="margin-bottom:3px">air 고객센터</div>
+            <div class="c-card-title">무엇을 도와드릴까요?</div>
+            <div class="c-card-desc">아래 주제를 선택하면 바로 안내해 드려요</div>
+            <div class="c-card-btns">
+              <button class="c-item-btn" onclick="go2('air 회원 가입', this)">air 회원 가입</button>
+              <button class="c-item-btn" onclick="go2('포인트 적립·사용', this)">포인트 적립·사용</button>
+              <button class="c-item-btn" onclick="go2('요금 납부·해지', this)">요금 납부·해지</button>
+              <button class="c-item-btn" onclick="go2('eSIM·USIM', this)">eSIM · USIM</button>
             </div>
+          </div>
 
-            <!-- 카드 1 : air 회원 가입 -->
-            <div class="c-card">
-              <div class="c-card-av"></div>
-              <div class="c-card-title">air 회원 가입</div>
-              <div class="c-card-desc">air 회원 가입에 대해서 궁금하신가요?<br>아래 버튼을 누르면 많이 묻는 질문 유형에 대해서 확인할 수 있습니다.</div>
-              <div class="c-card-btns">
-                <button class="c-item-btn" onclick="go2('air 회원 가입', 0)">air 가입 조건이 어떻게 되나요?</button>
-                <button class="c-item-btn" onclick="go2('air 회원 가입', 1)">T에서 air로 전환하면 기존 혜택은?</button>
-                <button class="c-item-btn" onclick="go2('air 회원 가입', 2)">회원가입 시 친구초대 혜택 알려주세요</button>
-              </div>
+          <!-- 카드 1 : air 회원 가입 -->
+          <div class="c-card">
+            <div class="c-card-av"></div>
+            <div class="c-card-title">air 회원 가입</div>
+            <div class="c-card-desc">air 회원 가입에 대해서 궁금하신가요?<br>아래 버튼을 누르면 많이 묻는 질문 유형에 대해서 확인할 수 있습니다.</div>
+            <div class="c-card-btns">
+              <button class="c-item-btn" onclick="goQ('air 회원 가입', 0, this)">air 가입 조건이 어떻게 되나요?</button>
+              <button class="c-item-btn" onclick="goQ('air 회원 가입', 1, this)">T에서 air로 전환하면 기존 혜택은?</button>
+              <button class="c-item-btn" onclick="goQ('air 회원 가입', 2, this)">회원가입 시 친구초대 혜택 알려주세요</button>
             </div>
+          </div>
 
-            <!-- 카드 2 : 포인트 -->
-            <div class="c-card">
-              <div class="c-card-av"></div>
-              <div class="c-card-title">포인트 적립·사용</div>
-              <div class="c-card-desc">air 포인트 적립 및 사용에 대해서 궁금하신가요?<br>아래 버튼을 누르면 많이 묻는 질문 유형에 대해 확인할 수 있어요</div>
-              <div class="c-card-btns">
-                <button class="c-item-btn" onclick="go2('포인트 적립·사용', 0)">포인트로 요금을 할인받을 수 있나요?</button>
-                <button class="c-item-btn" onclick="go2('포인트 적립·사용', 1)">포인트 적립과 사용 방법을 알려주세요</button>
-                <button class="c-item-btn" onclick="go2('포인트 적립·사용', 2)">포인트샵에서 어떤 상품으로 교환할 수 있나요?</button>
-              </div>
+          <!-- 카드 2 : 포인트 -->
+          <div class="c-card">
+            <div class="c-card-av"></div>
+            <div class="c-card-title">포인트 적립·사용</div>
+            <div class="c-card-desc">air 포인트 적립 및 사용에 대해서 궁금하신가요?<br>아래 버튼을 누르면 많이 묻는 질문 유형에 대해 확인할 수 있어요</div>
+            <div class="c-card-btns">
+              <button class="c-item-btn" onclick="goQ('포인트 적립·사용', 0, this)">포인트로 요금을 할인받을 수 있나요?</button>
+              <button class="c-item-btn" onclick="goQ('포인트 적립·사용', 1, this)">포인트 적립과 사용 방법을 알려주세요</button>
+              <button class="c-item-btn" onclick="goQ('포인트 적립·사용', 2, this)">포인트샵에서 어떤 상품으로 교환할 수 있나요?</button>
             </div>
+          </div>
 
-            <!-- 카드 3 : 요금 -->
-            <div class="c-card">
-              <div class="c-card-av"></div>
-              <div class="c-card-title">요금 납부·해지</div>
-              <div class="c-card-desc">air 요금 납부 및 해지에 대해서 궁금하신가요?<br>아래 버튼을 누르면 많이 묻는 질문 유형에 대해 확인할 수 있어요</div>
-              <div class="c-card-btns">
-                <button class="c-item-btn" onclick="go2('요금 납부·해지', 0)">요금 자동납부 방법을 변경하고 싶어요</button>
-                <button class="c-item-btn" onclick="go2('요금 납부·해지', 1)">월별 요금 납부 내역을 확인하고 싶어요</button>
-                <button class="c-item-btn" onclick="go2('요금 납부·해지', 2)">해지는 어떻게 신청하나요?</button>
-              </div>
+          <!-- 카드 3 : 요금 -->
+          <div class="c-card">
+            <div class="c-card-av"></div>
+            <div class="c-card-title">요금 납부·해지</div>
+            <div class="c-card-desc">air 요금 납부 및 해지에 대해서 궁금하신가요?<br>아래 버튼을 누르면 많이 묻는 질문 유형에 대해 확인할 수 있어요</div>
+            <div class="c-card-btns">
+              <button class="c-item-btn" onclick="goQ('요금 납부·해지', 0, this)">요금 자동납부 방법을 변경하고 싶어요</button>
+              <button class="c-item-btn" onclick="goQ('요금 납부·해지', 1, this)">월별 요금 납부 내역을 확인하고 싶어요</button>
+              <button class="c-item-btn" onclick="goQ('요금 납부·해지', 2, this)">해지는 어떻게 신청하나요?</button>
             </div>
+          </div>
 
-          </div><!-- /carousel-track -->
-        </div><!-- /carousel-viewport -->
+        </div><!-- /carousel-track -->
+      </div><!-- /carousel-viewport -->
+      <button class="c-arrow right" id="arrowR" onclick="slide(1)">›</button>
+    </div><!-- /carousel-outer -->
 
-        <button class="c-arrow right" id="arrowR" onclick="slide(1)">›</button>
-      </div><!-- /carousel-outer -->
-
-      <div class="carousel-dots" id="dots" style="margin-top:12px;">
-        <div class="dot active"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-      </div>
-    </div><!-- /chat-body -->
-
-    <div class="input-bar">
-      <span class="input-plus">+</span>
-      <input class="text-input" type="text" placeholder="">
-      <button class="send-btn"></button>
+    <div class="carousel-dots" id="dots" style="margin-top:12px;">
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
     </div>
+  </div><!-- /chat-body -->
+
+  <div class="input-bar">
+    <span class="input-plus">+</span>
+    <input class="text-input" type="text" placeholder="">
+    <button class="send-btn"></button>
   </div>
-
-  <!-- ══════════ SCREEN 2 : 2DEPTH ══════════ -->
-  <div class="screen" id="s2">
-    <div class="chat-body">
-      <div class="cat-chip-row">
-        <span class="cat-chip" id="chip2">회선 개통 문의</span>
-      </div>
-
-      <!-- 통합 카드: 봇 설명 + 선택지 -->
-      <div class="depth-card">
-        <div class="depth-card-header">
-          <div class="depth-card-av"></div>
-          <span class="depth-card-title" id="bubble2Title">회선 개통 문의</span>
-        </div>
-        <div class="depth-card-desc" id="bubble2Desc">
-          air 회선 개통에 대해서 궁금하신가요?<br>
-          아래 버튼을 누르면 많이 묻는 질문 유형에 대해서 확인할 수 있습니다.
-        </div>
-        <div class="opt-btns" id="optBtns">
-          <button class="opt-btn" onclick="go3('유형 1')">회선 개통 유형 1</button>
-          <button class="opt-btn" onclick="go3('유형 2')">회선 개통 유형 2</button>
-          <button class="opt-btn" onclick="go3('유형 3')">회선 개통 유형 3</button>
-        </div>
-      </div>
-
-      <!-- 카드 아래 캡션형 네비게이션 -->
-      <div class="card-nav">
-        <button class="card-nav-btn" onclick="showScreen(1,null)">이전으로</button>
-        <button class="card-nav-btn" onclick="showScreen(1,null)">처음으로</button>
-      </div>
-    </div>
-
-    <div class="input-bar">
-      <span class="input-plus">+</span>
-      <input class="text-input" type="text" placeholder="">
-      <button class="send-btn"></button>
-    </div>
-  </div>
-
-  <!-- ══════════ SCREEN 3 : 3DEPTH ══════════ -->
-  <div class="screen" id="s3">
-    <div class="chat-body">
-      <div class="cat-chip-row">
-        <span class="cat-chip" id="chip3">회선 개통 문의</span>
-      </div>
-
-      <div class="detail-card" id="detailCard">
-        <p class="detail-q" id="detailQ"></p>
-        <ul class="detail-list" id="detailList"></ul>
-        <!-- more-toggle은 100자 이상일 때만 동적 삽입 -->
-        <button class="connect-btn" onclick="window.open('https://mw-aicc.sktelecom.com/msgfe/chatWrap?popUp=true&id=AIRWEBCH01','_blank','width=400,height=700')">채팅상담사 연결하기</button>
-      </div>
-
-      <!-- 카드 아래 캡션형 네비게이션 (2depth와 동일 방식) -->
-      <div class="card-nav">
-        <button class="card-nav-btn" onclick="showScreen(2,null)">이전으로</button>
-        <button class="card-nav-btn" onclick="showScreen(1,null)">처음으로</button>
-      </div>
-    </div>
-
-    <div class="input-bar">
-      <span class="input-plus">+</span>
-      <input class="text-input" type="text" placeholder="">
-      <button class="send-btn"></button>
-    </div>
-  </div>
-
 
 </div><!-- /chat-window -->
 
 <script>
-  /* ── 상담 종료 / 재시작 ── */
-  function endChat() {
-    // 이미 종료 블록이 있으면 중복 방지
-    if (document.getElementById('endAppend')) return;
-
-    const activeScreen = document.querySelector('.screen.active');
-    if (!activeScreen) return;
-
-    // 현재 화면의 네비게이션 버튼 숨김
-    activeScreen.querySelectorAll('.card-nav').forEach(el => el.style.display = 'none');
-
-    // 종료 메시지 블록을 chat-body 하단에 append
-    const chatBody = activeScreen.querySelector('.chat-body');
-    const endEl = document.createElement('div');
-    endEl.id = 'endAppend';
-    endEl.className = 'end-append';
-    endEl.innerHTML = `
-      <div class="end-msg-box">
-        고객님, 챗봇과의 상담이 종료되었습니다.<br>
-        챗봇과 대화를 다시 시작하고 싶으시면,<br>
-        아래 버튼을 눌러주세요.
-      </div>
-      <button class="end-restart-btn" onclick="restartChat()">챗봇 시작하기</button>
-    `;
-    chatBody.appendChild(endEl);
-
-    // 스크롤을 하단으로
-    setTimeout(() => { chatBody.scrollTop = chatBody.scrollHeight; }, 50);
-  }
-
-  function restartChat() {
-    // 종료 블록 제거
-    const endEl = document.getElementById('endAppend');
-    if (endEl) endEl.remove();
-
-    // 숨겼던 네비 버튼 복원
-    document.querySelectorAll('.card-nav').forEach(el => el.style.display = '');
-
-    // 캐러셀 초기화 후 1Depth로
-    cur = 0;
-    document.getElementById('cTrack').style.transform = 'translateX(0)';
-    document.getElementById('arrowL').classList.add('hidden');
-    document.getElementById('arrowR').classList.remove('hidden');
-    updateDots();
-    showScreen(1, null);
-    document.querySelectorAll('.demo-tab').forEach((t,i) => t.classList.toggle('active', i === 0));
-  }
-
-  /* ── 오늘 날짜 표시 ── */
+  /* ── 날짜 ── */
   (function() {
     const days = ['일','월','화','수','목','금','토'];
     const now = new Date();
     const mm = String(now.getMonth() + 1).padStart(2, '0');
     const dd = String(now.getDate()).padStart(2, '0');
-    const day = days[now.getDay()];
-    document.getElementById('chatDate').textContent = `${mm}.${dd} (${day})`;
+    document.getElementById('chatDate').textContent = `${mm}.${dd} (${days[now.getDay()]})`;
   })();
 
   /* ── 캐러셀 ── */
   let cur = 0;
-  const TOTAL = 4;
-  const CARD_W = 280; // 카드 폭(270) + gap(10)
+  const TOTAL = 4, CARD_W = 280;
 
   function slide(dir) {
     cur = Math.max(0, Math.min(TOTAL - 1, cur + dir));
@@ -761,90 +376,58 @@
     document.getElementById('arrowL').classList.toggle('hidden', cur === 0);
     document.getElementById('arrowR').classList.toggle('hidden', cur === TOTAL - 1);
   }
-
   function updateDots() {
     document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === cur));
   }
 
-  /* ── 화면 전환 ── */
-  function showScreen(n, btn) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById('s' + n).classList.add('active');
-    if (btn) {
-      document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
-      btn.classList.add('active');
-    } else {
-      // 버튼 탭 상태 동기화
-      document.querySelectorAll('.demo-tab').forEach((t, i) => t.classList.toggle('active', i === n - 1));
-    }
-  }
-
-  /* ── FAQ 데이터 (Q&A) ── */
+  /* ── FAQ 데이터 ── */
   const catData = {
     'air 회원 가입': {
       desc: 'air 회원 가입에 대해서 궁금하신가요?<br>아래 버튼을 누르면 많이 묻는 질문 유형에 대해서 확인할 수 있습니다.',
       opts: [
-        {
-          q: 'air 가입 조건이 어떻게 되나요?',
+        { q: 'air 가입 조건이 어떻게 되나요?',
           a: ['air 서비스는 19세 이상 대한민국 국적의 성인만 가입 가능합니다.',
               '(19세 미만이거나 외국인은 가입이 어렵습니다.)',
-              '또한, 1인은 하나의 회선만 가입 가능하기에, 여러 개의 air 이동전화 회선을 가입하거나 2nd/멀티쓰기/테더링/쉐어링 서비스는 이용이 어렵습니다.']
-        },
-        {
-          q: 'T에서 air로 전환하면 기존 혜택은 어떻게 되나요?',
+              '또한, 1인은 하나의 회선만 가입 가능하기에, 여러 개의 air 이동전화 회선을 가입하거나 2nd/멀티쓰기/테더링/쉐어링 서비스는 이용이 어렵습니다.'] },
+        { q: 'T에서 air로 전환하면 기존 혜택은 어떻게 되나요?',
           a: ['SKT에서 air로 전환하면 SKT의 혜택을 받을 수 없습니다.',
               '① 결합할인, 약정할인을 받을 수 없습니다.',
               '② air 가입 기간은 가입연수 산정에서 제외됩니다. (기존 가입연수는 보존됩니다.)',
               '③ T멤버십을 이용할 수 없습니다.',
               '④ SKT에서 가지고 있던 로밍쿠폰, 데이터쿠폰이 삭제되어 더 이상 이용할 수 없습니다.',
               '⑤ SKT 고객 장기혜택을 받을 수 없습니다.',
-              '⑥ 로밍 상품 구입 시 혜택들이 제공되지 않습니다.']
-        },
-        {
-          q: '회원가입 시 친구초대 혜택 알려주세요',
+              '⑥ 로밍 상품 구입 시 혜택들이 제공되지 않습니다.'] },
+        { q: '회원가입 시 친구초대 혜택 알려주세요',
           a: ['air App 신규 가입일 48시간 내에 초대코드를 입력하면 나와 나를 초대한 친구 모두 1,000p가 적립됩니다.',
-              '다만 친구초대는 최대 20명까지 적립을 받을 수 있고, 21명째부터는 초대받은 친구만 포인트를 받고 포인트를 발송할 수 없어요.']
-        }
+              '다만 친구초대는 최대 20명까지 적립을 받을 수 있고, 21명째부터는 초대받은 친구만 포인트를 받고 포인트를 발송할 수 없어요.'] }
       ]
     },
     '포인트 적립·사용': {
       desc: 'air 포인트 적립 및 사용에 대해서 궁금하신가요?<br>아래 버튼을 누르면 많이 묻는 질문 유형에 대해 확인할 수 있어요',
       opts: [
-        {
-          q: '포인트로 요금을 할인받을 수 있나요?',
+        { q: '포인트로 요금을 할인받을 수 있나요?',
           a: ['적립하신 포인트로 요금할인에 사용할 수 있습니다.',
-              '매 월 5,000포인트까지 요금할인에 사용해보세요!']
-        },
-        {
-          q: '포인트 적립과 사용 방법을 알려주세요',
+              '매 월 5,000포인트까지 요금할인에 사용해보세요!'] },
+        { q: '포인트 적립과 사용 방법을 알려주세요',
           a: ['air에서 다양한 혜택 프로그램(맞벌기, 오늘의 픽, 포인트 미션 등)에 참여하여 포인트를 적립할 수 있습니다.',
-              '포인트는 1포인트부터 사용할 수 있으며, 다만 air 요금제에 가입한 고객님에 한해 가능하며, 미가입 시는 포인트 적립만 가능합니다.']
-        },
-        {
-          q: '포인트샵에서 어떤 상품으로 교환할 수 있나요?',
+              '포인트는 1포인트부터 사용할 수 있으며, 다만 air 요금제에 가입한 고객님에 한해 가능하며, 미가입 시는 포인트 적립만 가능합니다.'] },
+        { q: '포인트샵에서 어떤 상품으로 교환할 수 있나요?',
           a: ['포인트샵에서는 air의 포인트를 상품권, 편의점/백화점 상품권, 식음료 상품권 등 다양한 브랜드의 모바일상품권을 구입할 수 있어요.',
-              '고객분들이 더 다양한 상품권을 구입하실 수 있도록 다양한 브랜드와 모바일상품권들이 지속적으로 추가될 예정이에요.']
-        }
+              '고객분들이 더 다양한 상품권을 구입하실 수 있도록 다양한 브랜드와 모바일상품권들이 지속적으로 추가될 예정이에요.'] }
       ]
     },
     '요금 납부·해지': {
       desc: 'air 요금 납부 및 해지에 대해서 궁금하신가요?<br>아래 버튼을 누르면 많이 묻는 질문 유형에 대해 확인할 수 있어요',
       opts: [
-        {
-          q: '요금 자동납부 방법을 변경하고 싶어요',
+        { q: '요금 자동납부 방법을 변경하고 싶어요',
           a: ['air App에서 아래 경로를 통해 바로 변경할 수 있습니다.',
-              '전체 → 멤버십 요금안 → 납부 방법 변경 → 변경하기']
-        },
-        {
-          q: '월별 요금 납부 내역을 확인하고 싶어요',
+              '전체 → 멤버십 요금안 → 납부 방법 변경 → 변경하기'] },
+        { q: '월별 요금 납부 내역을 확인하고 싶어요',
           a: ['air App에서 아래 경로를 통해 바로 확인 가능합니다.',
               '전체 → 월별 요금 및 이용내역',
-              '(최근 3개월 청구금액 제공됩니다)']
-        },
-        {
-          q: '해지는 어떻게 신청하나요?',
-          a: ['해지는 air App 또는 고객센터에서 신청하시면 방법을 상세히 안내드리겠습니다.']
-        }
+              '(최근 3개월 청구금액 제공됩니다)'] },
+        { q: '해지는 어떻게 신청하나요?',
+          a: ['해지는 air App 또는 고객센터에서 신청하시면 방법을 상세히 안내드리겠습니다.'] }
       ]
     },
     'eSIM·USIM': {
@@ -857,51 +440,107 @@
     }
   };
 
-  let activeCat = 'air 회원 가입';
-  let activeOptIdx = 0;
+  let activeCat = '';
 
-  function go2(cat, optIdx) {
-    activeCat = cat;
-    const d = catData[cat];
-    document.getElementById('chip2').textContent = cat;
-    document.getElementById('bubble2Title').textContent = cat;
-    document.getElementById('bubble2Desc').innerHTML = d.desc;
-    const btns = document.getElementById('optBtns');
-    btns.innerHTML = d.opts.map((o, i) =>
-      `<button class="opt-btn" onclick="go3(${i})">${o.q}</button>`
-    ).join('');
-    showScreen(2, null);
-    document.querySelectorAll('.demo-tab').forEach((t,i) => t.classList.toggle('active', i === 1));
-    if (optIdx !== undefined) { go3(optIdx); }
+  function scrollBottom() {
+    const b = document.getElementById('chatBody');
+    setTimeout(() => { b.scrollTop = b.scrollHeight; }, 60);
   }
 
-  function go3(idx) {
-    activeOptIdx = idx;
-    const item = catData[activeCat].opts[idx];
-    document.getElementById('chip3').textContent = activeCat;
-    document.getElementById('detailQ').textContent = item.q;
-    document.getElementById('detailList').innerHTML =
-      item.a.map(line => `<li>${line}</li>`).join('') +
-      `<li style="list-style:none; padding-top:4px;"><a class="detail-app-link" href="#">해당 App내 화면으로 이동하기</a></li>`;
+  function disableCarouselBtns(selectedBtn) {
+    document.querySelectorAll('.c-item-btn').forEach(b => {
+      b.disabled = true;
+      b.classList.remove('btn-selected');
+    });
+    if (selectedBtn) selectedBtn.classList.add('btn-selected');
+  }
 
-    // 기존 more-toggle 완전 제거
-    const existing = document.getElementById('detailCard').querySelector('.more-toggle');
-    if (existing) existing.remove();
+  function appendUserBubble(text) {
+    const chatBody = document.getElementById('chatBody');
+    const row = document.createElement('div');
+    row.className = 'user-bubble-row appended';
+    row.innerHTML = `<div class="user-bubble">${text}</div>`;
+    chatBody.appendChild(row);
+  }
 
-    // 100자 이상일 때만 more-toggle 동적 삽입 (connect-btn 바로 앞)
-    const totalLen = item.a.join('').length;
-    if (totalLen >= 250) {
-      const btn = document.createElement('button');
-      btn.className = 'more-toggle';
-      btn.dataset.open = 'false';
-      btn.onclick = function() { toggleMore(this); };
-      btn.innerHTML = '더보기 <span>∨</span>';
-      const connectBtn = document.getElementById('detailCard').querySelector('.connect-btn');
-      connectBtn.before(btn);
+  function appendDetailCard(item) {
+    const chatBody = document.getElementById('chatBody');
+    const listHtml = item.a.map(line => `<li>${line}</li>`).join('') +
+      `<li style="list-style:none;padding-top:4px;"><a class="detail-app-link" href="#">해당 App내 화면으로 이동하기</a></li>`;
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'appended';
+    wrapper.innerHTML = `
+      <div class="detail-card">
+        <p class="detail-q">${item.q}</p>
+        <ul class="detail-list">${listHtml}</ul>
+        <button class="connect-btn" onclick="window.open('https://mw-aicc.sktelecom.com/msgfe/chatWrap?popUp=true&id=AIRWEBCH01','_blank','width=400,height=700')">채팅상담사 연결하기</button>
+      </div>`;
+
+    if (item.a.join('').length >= 250) {
+      const toggle = document.createElement('button');
+      toggle.className = 'more-toggle';
+      toggle.dataset.open = 'false';
+      toggle.onclick = function() { toggleMore(this); };
+      toggle.innerHTML = '더보기 <span>∨</span>';
+      wrapper.querySelector('.connect-btn').before(toggle);
     }
 
-    showScreen(3, null);
-    document.querySelectorAll('.demo-tab').forEach((t,i) => t.classList.toggle('active', i === 2));
+    chatBody.appendChild(wrapper);
+  }
+
+  /* 대주제 선택 → 2DEPTH 카드 append */
+  function go2(cat, srcBtn) {
+    activeCat = cat;
+    disableCarouselBtns(srcBtn);
+    appendUserBubble(cat);
+
+    const d = catData[cat];
+    const optHtml = d.opts.map((o, i) =>
+      `<button class="opt-btn" onclick="go3(${i}, this)">${o.q}</button>`
+    ).join('');
+
+    const chatBody = document.getElementById('chatBody');
+    const card = document.createElement('div');
+    card.className = 'appended';
+    card.innerHTML = `
+      <div class="depth-card">
+        <div class="depth-card-header">
+          <div class="depth-card-av"></div>
+          <span class="depth-card-title">${cat}</span>
+        </div>
+        <div class="depth-card-desc">${d.desc}</div>
+        <div class="opt-btns">${optHtml}</div>
+      </div>`;
+    chatBody.appendChild(card);
+    scrollBottom();
+  }
+
+  /* 세부 질문 선택 → 3DEPTH 카드 append */
+  function go3(idx, srcBtn) {
+    const item = catData[activeCat].opts[idx];
+
+    if (srcBtn) {
+      srcBtn.closest('.opt-btns').querySelectorAll('.opt-btn').forEach(b => {
+        b.disabled = true;
+        b.classList.remove('btn-selected');
+      });
+      srcBtn.classList.add('btn-selected');
+    }
+
+    appendUserBubble(item.q);
+    appendDetailCard(item);
+    scrollBottom();
+  }
+
+  /* 캐러셀 카드에서 질문 직접 선택 */
+  function goQ(cat, idx, srcBtn) {
+    activeCat = cat;
+    disableCarouselBtns(srcBtn);
+    const item = catData[cat].opts[idx];
+    appendUserBubble(item.q);
+    appendDetailCard(item);
+    scrollBottom();
   }
 
   function toggleMore(btn) {
@@ -909,6 +548,40 @@
     btn.dataset.open = isOpen ? 'false' : 'true';
     btn.querySelector('span').textContent = isOpen ? '∨' : '∧';
     btn.firstChild.textContent = isOpen ? '더보기 ' : '접기 ';
+  }
+
+  /* ── 상담 종료 ── */
+  function endChat() {
+    if (document.getElementById('endAppend')) return;
+    const chatBody = document.getElementById('chatBody');
+    const endEl = document.createElement('div');
+    endEl.id = 'endAppend';
+    endEl.className = 'end-append appended';
+    endEl.innerHTML = `
+      <div class="end-msg-box">
+        고객님, 챗봇과의 상담이 종료되었습니다.<br>
+        챗봇과 대화를 다시 시작하고 싶으시면,<br>
+        아래 버튼을 눌러주세요.
+      </div>
+      <button class="end-restart-btn" onclick="restartChat()">챗봇 시작하기</button>`;
+    chatBody.appendChild(endEl);
+    scrollBottom();
+  }
+
+  /* ── 처음으로 ── */
+  function restartChat() {
+    document.querySelectorAll('.appended').forEach(el => el.remove());
+    document.querySelectorAll('.c-item-btn').forEach(b => {
+      b.disabled = false;
+      b.classList.remove('btn-selected');
+    });
+    activeCat = '';
+    cur = 0;
+    document.getElementById('cTrack').style.transform = 'translateX(0)';
+    document.getElementById('arrowL').classList.add('hidden');
+    document.getElementById('arrowR').classList.remove('hidden');
+    updateDots();
+    document.getElementById('chatBody').scrollTop = 0;
   }
 </script>
 </body>
