@@ -272,6 +272,48 @@
       color: #555; cursor: pointer; text-align: center; transition: background .15s;
     }
     .card-nav-btn:hover { background: #f0f0f0; }
+
+    /* ── 퀵 FAQ ── */
+    .quick-section { margin-bottom: 14px; }
+    .quick-label { font-size: 11px; color: #999; margin-bottom: 7px; font-weight: 600; }
+    .quick-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+    .quick-btn {
+      padding: 7px 12px; border: 1px solid #00b4ce; border-radius: 16px;
+      font-size: 11px; color: #00818f; background: #fff;
+      cursor: pointer; white-space: nowrap; transition: all .15s;
+    }
+    .quick-btn:hover:not(:disabled) { background: #e6f7fa; }
+    .quick-btn:disabled { opacity: 0.4; cursor: default; }
+
+    /* ── 관련 질문 ── */
+    .related-section { margin-top: 10px; width: 270px; }
+    .related-title { font-size: 11px; color: #999; margin-bottom: 7px; }
+    .related-btn {
+      display: block; width: 100%;
+      border: 1px solid #e8e8e8; border-radius: 7px;
+      padding: 9px 12px; font-size: 12px; color: #555;
+      background: #f9f9f9; text-align: left; cursor: pointer;
+      margin-bottom: 5px; transition: background .15s;
+    }
+    .related-btn:hover:not(:disabled) { background: #efefef; }
+    .related-btn:disabled { opacity: 0.4; cursor: default; }
+
+    /* ── 피드백 ── */
+    .feedback-section { margin-top: 10px; width: 270px; }
+    .feedback-label { font-size: 13px; color: #555; text-align: center; margin-bottom: 8px; }
+    .feedback-row { display: flex; gap: 8px; }
+    .feedback-btn {
+      flex: 1; padding: 10px 6px; border: 1px solid #ddd;
+      border-radius: 22px; font-size: 12px; background: #fff;
+      cursor: pointer; text-align: center; transition: background .15s;
+    }
+    .feedback-btn.yes { border-color: #00b4ce; color: #00818f; }
+    .feedback-btn.yes:hover { background: #e6f7fa; }
+    .feedback-btn.no:hover { background: #f5f5f5; }
+    .feedback-thanks {
+      font-size: 13px; color: #555; text-align: center;
+      padding: 10px 0; line-height: 1.8;
+    }
   </style>
 </head>
 <body>
@@ -298,6 +340,17 @@
 
   <div class="chat-body" id="chatBody">
     <div class="chat-date" id="chatDate"></div>
+
+    <!-- 퀵 FAQ -->
+    <div class="quick-section">
+      <div class="quick-label">자주 찾는 질문</div>
+      <div class="quick-btns">
+        <button class="quick-btn" onclick="goQ('요금 납부·해지', 0, this)">💳 요금 납부방법</button>
+        <button class="quick-btn" onclick="goQ('eSIM·USIM', 0, this)">📱 eSIM 개통방법</button>
+        <button class="quick-btn" onclick="goQ('포인트 적립·사용', 0, this)">⭐ 포인트 사용법</button>
+        <button class="quick-btn" onclick="goQ('air 회원 가입', 0, this)">✅ 가입 조건 확인</button>
+      </div>
+    </div>
 
     <!-- 1DEPTH 캐러셀 -->
     <div class="carousel-outer">
@@ -463,13 +516,20 @@
 
   let activeCat = '';
 
+  const relatedData = {
+    'air 회원 가입':    [{ cat:'포인트 적립·사용', idx:0 }, { cat:'요금 납부·해지', idx:0 }],
+    '포인트 적립·사용': [{ cat:'air 회원 가입', idx:2 },   { cat:'요금 납부·해지', idx:1 }],
+    '요금 납부·해지':   [{ cat:'포인트 적립·사용', idx:0 }, { cat:'eSIM·USIM', idx:0 }],
+    'eSIM·USIM':        [{ cat:'air 회원 가입', idx:0 },   { cat:'요금 납부·해지', idx:2 }],
+  };
+
   function scrollBottom() {
     const b = document.getElementById('chatBody');
     setTimeout(() => { b.scrollTop = b.scrollHeight; }, 60);
   }
 
   function disableCarouselBtns(selectedBtn) {
-    document.querySelectorAll('.c-item-btn').forEach(b => {
+    document.querySelectorAll('.c-item-btn, .quick-btn, .related-btn').forEach(b => {
       b.disabled = true;
       b.classList.remove('btn-selected');
     });
@@ -489,13 +549,29 @@
     const listHtml = item.a.map(line => `<li>${line}</li>`).join('') +
       `<li style="list-style:none;padding-top:4px;"><a class="detail-app-link" href="#">해당 App내 화면으로 이동하기</a></li>`;
 
+    const relatedHtml = (relatedData[activeCat] || []).map(r => {
+      const q = catData[r.cat].opts[r.idx].q;
+      return `<button class="related-btn" onclick="goQ('${r.cat}', ${r.idx}, this)">${q}</button>`;
+    }).join('');
+
     const wrapper = document.createElement('div');
     wrapper.className = 'appended';
     wrapper.innerHTML = `
       <div class="detail-card">
         <p class="detail-q">${item.q}</p>
         <ul class="detail-list">${listHtml}</ul>
-        <button class="connect-btn" onclick="connectAgent(this)">채팅상담사 연결하기</button>
+      </div>
+      ${relatedHtml ? `
+      <div class="related-section">
+        <div class="related-title">💡 이런 내용도 찾고 있지 않으신가요?</div>
+        ${relatedHtml}
+      </div>` : ''}
+      <div class="feedback-section">
+        <p class="feedback-label">도움이 되셨나요?</p>
+        <div class="feedback-row">
+          <button class="feedback-btn yes" onclick="feedbackYes(this)">예, 해결됐어요 👍</button>
+          <button class="feedback-btn no" onclick="feedbackNo(this)">아니요, 더 필요해요</button>
+        </div>
       </div>
       <div class="card-nav">
         <button class="card-nav-btn" onclick="navBack('${activeCat}')">이전으로</button>
@@ -508,10 +584,21 @@
       toggle.dataset.open = 'false';
       toggle.onclick = function() { toggleMore(this); };
       toggle.innerHTML = '더보기 <span>∨</span>';
-      wrapper.querySelector('.connect-btn').before(toggle);
+      wrapper.querySelector('.detail-list').after(toggle);
     }
 
     chatBody.appendChild(wrapper);
+  }
+
+  function feedbackYes(btn) {
+    btn.closest('.feedback-section').innerHTML =
+      '<p class="feedback-thanks">✅ 도움이 되셨다니 기쁩니다!<br>다른 문의가 있으시면 언제든 알려주세요.</p>';
+  }
+
+  function feedbackNo(btn) {
+    btn.closest('.feedback-section').innerHTML = `
+      <p class="feedback-label" style="margin-bottom:8px">상담사가 도와드리겠습니다.</p>
+      <button class="connect-btn" onclick="connectAgent(this)">채팅상담사 연결하기</button>`;
   }
 
   /* 대주제 선택 → 2DEPTH 카드 append */
@@ -733,7 +820,7 @@
   /* ── 처음으로 ── */
   function restartChat() {
     document.querySelectorAll('.appended').forEach(el => el.remove());
-    document.querySelectorAll('.c-item-btn').forEach(b => {
+    document.querySelectorAll('.c-item-btn, .quick-btn').forEach(b => {
       b.disabled = false;
       b.classList.remove('btn-selected');
     });
